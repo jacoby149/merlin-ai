@@ -2,13 +2,23 @@
 version: "3.9"
 
 services:
-  fastapi:
+  ai-api:
     build:
-      context: ./api
+      context: ./ai-api
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
-      - ./api:/app  # Mount the api folder into the container for live code updates.
+      - ./ai-api:/app  # Mount the api folder into the container for live code updates.
     env_file:
-      - .env
+      - .ai-api-env
+  ai-ui:
+    build:
+      context: ./ai-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./ai-ui:/app  # Mount the api folder into the container for live code updates.
+    env_file:
+      - .ai-ui-env
