@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 gunicorn = "*"
 fastapi = "*"
-openai = "*"
 uvicorn = "*"
 
 [dev-packages]

@@ -1,6 +1,5 @@
 import os
 
-OPENAPI_KEY=""
 
 # goes through the above config variables 
 # checks if env vars of those names exist and sets them if they do

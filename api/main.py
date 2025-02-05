@@ -1,9 +1,12 @@
 
 from fastapi import FastAPI
-from endpoints.chat.endpoints import router as chat_router
 from starlette.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="ChatGPT-like API with Router")
+app = FastAPI(
+    title="Auto Code This API",
+    description="Visit localhost:3001 to code this API automatically",
+    version="1.0.0"
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,7 +16,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the chat router.
-app.include_router(chat_router)
-
-# You can also define additional routers or endpoints here.
+@app.get("/health_check",  description="Returns a health status. You can ttry asking the ai chat to make this endpoint return the health of the mongodb connection!")
+def health_check():
+    return {"Hello": "World"}

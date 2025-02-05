@@ -7,7 +7,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Auto Code This UI <br/>
+          Visit <code>localhost:3001</code> to code this app automatically.
         </p>
         <a
           className="App-link"

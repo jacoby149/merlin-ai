@@ -27,7 +27,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./ai-api:/app  # Mount the api folder into the container for live code updates.
+      - ./api:/app  # Mount the api folder into the container for live code updates.
     env_file:
       - .api-env
   ui:
