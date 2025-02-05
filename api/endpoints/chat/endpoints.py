@@ -1,29 +1,67 @@
 
 import os
 import uuid
+import sqlite3
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
 import settings
 
+# Initialize the OpenAI client.
 client = OpenAI(api_key=settings.OPENAPI_KEY)
-
-# Ensure your OpenAI API key is set in the environment.
 if not client.api_key:
     raise Exception("Missing OpenAI API key. Please set the OPENAPI_API_KEY environment variable.")
 
 # Create a router instance.
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-# In-memory store for conversation histories keyed by session_id.
-conversations = {}
+# Define the SQLite database file.
+DATABASE = "chat_sessions.db"
+
+# -------------------------------
+# SQLite Database Utilities
+# -------------------------------
+
+def get_db_connection():
+    """Returns a SQLite connection with row factory set."""
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Initializes the database with the required tables."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Create a table to store session info.
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sessions (
+            session_id TEXT PRIMARY KEY,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    # Create a table to store conversation messages.
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            role TEXT,
+            content TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Initialize the database when the module is imported.
+init_db()
 
 # -------------------------------
 # Pydantic Models
 # -------------------------------
 
 class ChatRequest(BaseModel):
-    session_id: str = "default"  # Use "default" if no session_id is provided.
+    session_id: str = "default"  # If "default", a new session will be created.
     message: str
 
 class ChatResponse(BaseModel):
@@ -34,6 +72,13 @@ class HistoryResponse(BaseModel):
     session_id: str
     history: list
 
+class SessionInfo(BaseModel):
+    session_id: str
+    created_at: str
+
+class SessionsResponse(BaseModel):
+    sessions: list[SessionInfo]
+
 # -------------------------------
 # Endpoints
 # -------------------------------
@@ -42,21 +87,46 @@ class HistoryResponse(BaseModel):
 async def chat_endpoint(req: ChatRequest):
     """
     Send a message to the chatbot and receive a reply.
-    The conversation history is maintained per session.
+    
+    This endpoint:
+      - Creates a new session (if needed) or reuses an existing one.
+      - Stores the user's message in SQLite.
+      - Loads the full conversation history for that session.
+      - Passes the conversation history (without any session IDs) to the OpenAI API.
+      - Stores the assistant’s reply in SQLite.
     """
-    # Generate a new session ID if the provided one is "default".
+    # Use the provided session_id or generate a new one if "default".
     session_id = req.session_id if req.session_id != "default" else str(uuid.uuid4())
 
-    # Initialize conversation history for new sessions.
-    if session_id not in conversations:
-        conversations[session_id] = []
+    # Open a database connection.
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-    conversation_history = conversations[session_id]
+    # Create a new session in the database if it doesn't already exist.
+    cursor.execute("SELECT * FROM sessions WHERE session_id = ?", (session_id,))
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO sessions (session_id) VALUES (?)", (session_id,))
+        conn.commit()
 
-    # Append the user's message to the conversation history.
-    conversation_history.append({"role": "user", "content": req.message})
+    # Store the user's message.
+    cursor.execute(
+        "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+        (session_id, "user", req.message)
+    )
+    conn.commit()
 
-    # Call the OpenAI ChatCompletion API with the conversation history.
+    # Load the entire conversation history for this session (ordered by time).
+    cursor.execute(
+        "SELECT role, content FROM messages WHERE session_id = ? ORDER BY created_at ASC",
+        (session_id,)
+    )
+    conversation_history = [
+        {"role": row["role"], "content": row["content"]}
+        for row in cursor.fetchall()
+    ]
+    conn.close()
+
+    # Call the OpenAI API using the conversation history.
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # or any available model
@@ -68,26 +138,74 @@ async def chat_endpoint(req: ChatRequest):
     # Extract the assistant's reply.
     reply_message = response.choices[0].message.content
 
-    # Append the assistant's reply to the conversation history.
-    conversation_history.append({"role": "assistant", "content": reply_message})
+    # Store the assistant's reply in the database.
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+        (session_id, "assistant", reply_message)
+    )
+    conn.commit()
+    conn.close()
 
     return ChatResponse(session_id=session_id, reply=reply_message)
 
-@router.get("/history/{session_id}", response_model=HistoryResponse)
-async def get_history(session_id: str):
+@router.get("/sessions", response_model=SessionsResponse)
+async def get_sessions():
     """
-    Retrieve the conversation history for the given session.
+    Retrieve a list of all sessions with their creation timestamps.
+    
+    This endpoint allows a client to view all available sessions stored in SQLite.
     """
-    if session_id not in conversations:
-        raise HTTPException(status_code=404, detail="Session not found")
-    return HistoryResponse(session_id=session_id, history=conversations[session_id])
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT session_id, created_at FROM sessions ORDER BY created_at DESC")
+    sessions = [
+        {"session_id": row["session_id"], "created_at": row["created_at"]}
+        for row in cursor.fetchall()
+    ]
+    conn.close()
+    return SessionsResponse(sessions=sessions)
 
-@router.delete("/history/{session_id}")
-async def reset_history(session_id: str):
+@router.get("/sessions/{session_id}", response_model=HistoryResponse)
+async def load_session(session_id: str):
     """
-    Delete the conversation history for the specified session.
+    Retrieve the conversation history for the specified session.
+    
+    This endpoint loads the conversation messages for a given session from SQLite.
     """
-    if session_id in conversations:
-        del conversations[session_id]
-    return {"detail": f"History for session '{session_id}' has been reset."}
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verify that the session exists.
+    cursor.execute("SELECT * FROM sessions WHERE session_id = ?", (session_id,))
+    if not cursor.fetchone():
+        conn.close()
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    cursor.execute(
+        "SELECT role, content, created_at FROM messages WHERE session_id = ? ORDER BY created_at ASC",
+        (session_id,)
+    )
+    history = [
+        {"role": row["role"], "content": row["content"], "created_at": row["created_at"]}
+        for row in cursor.fetchall()
+    ]
+    conn.close()
+    return HistoryResponse(session_id=session_id, history=history)
+
+@router.delete("/sessions/{session_id}")
+async def reset_session(session_id: str):
+    """
+    Delete the conversation history and session from SQLite.
+    
+    This endpoint allows a user to completely reset a session.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
+    cursor.execute("DELETE FROM sessions WHERE session_id = ?", (session_id,))
+    conn.commit()
+    conn.close()
+    return {"detail": f"Session '{session_id}' has been reset."}
 
