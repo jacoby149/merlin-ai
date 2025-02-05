@@ -1,0 +1,14 @@
+
+version: "3.9"
+
+services:
+  fastapi:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app  # Mount the api folder into the container for live code updates.
+    env_file:
+      - .env
