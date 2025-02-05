@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI
-from chat_router import router as chat_router
+from endpoints.chat.endpoints import router as chat_router
 
 app = FastAPI(title="ChatGPT-like API with Router")
 

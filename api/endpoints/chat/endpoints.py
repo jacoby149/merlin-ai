@@ -1,12 +1,16 @@
+
 import os
+import uuid
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import openai
+from openai import OpenAI
+import settings
+
+client = OpenAI(api_key=settings.OPENAPI_KEY)
 
 # Ensure your OpenAI API key is set in the environment.
-openai.api_key = os.getenv("OPENAI_API_KEY")
-if not openai.api_key:
-    raise Exception("Missing OpenAI API key. Please set the OPENAI_API_KEY environment variable.")
+if not client.api_key:
+    raise Exception("Missing OpenAI API key. Please set the OPENAPI_API_KEY environment variable.")
 
 # Create a router instance.
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -23,6 +27,7 @@ class ChatRequest(BaseModel):
     message: str
 
 class ChatResponse(BaseModel):
+    session_id: str
     reply: str
 
 class HistoryResponse(BaseModel):
@@ -39,18 +44,21 @@ async def chat_endpoint(req: ChatRequest):
     Send a message to the chatbot and receive a reply.
     The conversation history is maintained per session.
     """
-    # Initialize conversation history for new sessions.
-    if req.session_id not in conversations:
-        conversations[req.session_id] = []
+    # Generate a new session ID if the provided one is "default".
+    session_id = req.session_id if req.session_id != "default" else str(uuid.uuid4())
 
-    conversation_history = conversations[req.session_id]
+    # Initialize conversation history for new sessions.
+    if session_id not in conversations:
+        conversations[session_id] = []
+
+    conversation_history = conversations[session_id]
 
     # Append the user's message to the conversation history.
     conversation_history.append({"role": "user", "content": req.message})
 
     # Call the OpenAI ChatCompletion API with the conversation history.
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # or any available model
             messages=conversation_history
         )
@@ -58,12 +66,12 @@ async def chat_endpoint(req: ChatRequest):
         raise HTTPException(status_code=500, detail=f"OpenAI API error: {str(e)}")
 
     # Extract the assistant's reply.
-    reply_message = response["choices"][0]["message"]["content"]
+    reply_message = response.choices[0].message.content
 
     # Append the assistant's reply to the conversation history.
     conversation_history.append({"role": "assistant", "content": reply_message})
 
-    return ChatResponse(reply=reply_message)
+    return ChatResponse(session_id=session_id, reply=reply_message)
 
 @router.get("/history/{session_id}", response_model=HistoryResponse)
 async def get_history(session_id: str):
