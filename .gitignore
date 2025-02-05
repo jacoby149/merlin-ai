@@ -1,2 +1,4 @@
 .env
 .ai-api-env
+.ui-env
+.api-env

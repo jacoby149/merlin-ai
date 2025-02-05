@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Use an environment variable for the API base URL if needed.
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 
 function ChatApp() {
   // Initialize sessionId from localStorage or use "default".

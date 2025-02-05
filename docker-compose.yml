@@ -7,7 +7,7 @@ services:
       context: ./ai-api
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"
+      - "8001:8000"
     volumes:
       - ./ai-api:/app  # Mount the api folder into the container for live code updates.
     env_file:
@@ -17,8 +17,24 @@ services:
       context: ./ai-ui
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "3001:3000"
     volumes:
       - ./ai-ui:/app  # Mount the api folder into the container for live code updates.
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ai-api:/app  # Mount the api folder into the container for live code updates.
     env_file:
-      - .ai-ui-env
+      - .api-env
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./ui:/app  # Mount the api folder into the container for live code updates.
