@@ -1,5 +1,18 @@
+MINIMUM FOR RELEASE
+
+Add licensing [Gumroad]
+Add product flow [Gumroad]
+Add license key verification
+Add licensing files [MNazar]
+Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
+File for a trademark
+Add Token adding to .env from the frontend Interface
+Add Comprehensive Readme With GIFs
+Add a tutorial Video
 Make UI that takes the GPT API Key and writes it to the .env
 Make a licensing system $5 for employees, free for personal, email for big orgs.
+
+2.
 UI V1
   UI Textbox and API Textbox.
   "Make an API for a shopping app"

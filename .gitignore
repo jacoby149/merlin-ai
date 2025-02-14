@@ -2,3 +2,4 @@
 .ai-api-env
 .ui-env
 .api-env
+**.DS_Store
