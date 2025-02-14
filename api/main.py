@@ -45,3 +45,24 @@ def get_product(product_id: int):
         if product.id == product_id:
             return product
     raise HTTPException(status_code=404, detail="Product not found")
+
+@app.post("/products", response_model=Product, description="Create a new product.")
+def create_product(product: Product):
+    products.append(product)
+    return product
+
+@app.put("/products/{product_id}", response_model=Product, description="Update a product by its ID.")
+def update_product(product_id: int, updated_product: Product):
+    for index, product in enumerate(products):
+        if product.id == product_id:
+            products[index] = updated_product
+            return updated_product
+    raise HTTPException(status_code=404, detail="Product not found")
+
+@app.delete("/products/{product_id}", description="Delete a product by its ID.")
+def delete_product(product_id: int):
+    for index, product in enumerate(products):
+        if product.id == product_id:
+            del products[index]
+            return {"detail": "Product deleted"}
+    raise HTTPException(status_code=404, detail="Product not found")
