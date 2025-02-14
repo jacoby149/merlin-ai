@@ -3,9 +3,9 @@
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+import tarfile
+import io
 import settings
-import subprocess
-import time
 
 # Initialize the Docker client from the host's Docker socket.
 import docker
@@ -150,3 +150,41 @@ async def scan_api(num_lines: int = 10):
         return {"logs": logs}
     except docker.errors.DockerException as e:
         raise HTTPException(status_code=500, detail=f"Error fetching API logs: {e}")
+
+class NewMainContent(BaseModel):
+    content: str
+
+
+@router.post("/write_api")
+async def write_api(new_main: NewMainContent):
+    """
+    Overwrites the main.py file inside the API container's /app directory with the new content provided.
+    The new main.py content is sent in the request payload. After updating the file, it calls the 
+    container_restart_api() endpoint to restart the API container.
+    """
+    # Locate the API container using its Docker Compose service label.
+    client = docker.from_env()
+    containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="API container not found")
+    container = containers[0]
+
+    # Create an in-memory tar archive containing the new main.py file.
+    data = new_main.content.encode("utf-8")
+    tarstream = io.BytesIO()
+    with tarfile.open(fileobj=tarstream, mode="w") as tar:
+        tarinfo = tarfile.TarInfo(name="main.py")
+        tarinfo.size = len(data)
+        tar.addfile(tarinfo, io.BytesIO(data))
+    tarstream.seek(0)
+
+    # Use put_archive to overwrite the main.py file in the /app directory.
+    try:
+        success = container.put_archive(path="/app", data=tarstream.getvalue())
+        if not success:
+            raise HTTPException(status_code=500, detail="Error writing main.py to the API container")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
+
+    # Call the existing container_restart_api() endpoint to restart the API container.
+    return await container_restart_api()
