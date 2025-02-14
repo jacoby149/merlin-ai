@@ -79,7 +79,7 @@ function App() {
               TwoChats
             </button>
             <button style={styles.button} onClick={() => setView('OneChat')}>
-              OneChat
+              OneChat 
             </button>
           </nav>
         </div>

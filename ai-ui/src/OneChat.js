@@ -21,11 +21,11 @@ function OneChat() {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/chat/`, {
+      const response = await fetch(`${API_BASE_URL}/auto_coder/fs_mod`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // No session ID is needed now; just send the message.
-        body: JSON.stringify({ message: inputMessage }),
+        body: JSON.stringify({ chat: inputMessage,context:"" }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);

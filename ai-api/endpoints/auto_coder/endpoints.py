@@ -52,15 +52,15 @@ def ask_api(prompt: str):
 
     return code_block, reply_text
 
-class APIModRequest(BaseModel):
+class ModRequest(BaseModel):
     chat:str
     context:str
 
-class APIModRespose(BaseModel):
+class ModRespose(BaseModel):
     reply:str
 
 @router.post("/api_mod")
-async def api_mod(r:APIModRequest):
+async def api_mod(r:ModRequest):
     """
     Modifies the main.py file
     """
@@ -107,15 +107,9 @@ def ask_ui(prompt: str):
 
     return code_block, reply_text
 
-class APIModRequest(BaseModel):
-    chat:str
-    context:str
-
-class UIModResponse(BaseModel):
-    reply:str
 
 @router.post("/ui_mod")
-async def ui_mod(r:APIModRequest):
+async def ui_mod(r:ModRequest):
     """
     Modifies the App.js file
     """
@@ -135,3 +129,8 @@ async def ui_mod(r:APIModRequest):
     await write_app_js(code)
     return {"reply":reply}
 
+@router.post("/fs_mod")
+async def fs_mod(r:ModRequest):
+    api_reply = (await api_mod(r))["reply"]
+    ui_reply = (await ui_mod(r))["reply"]
+    return {"reply":f"API : {api_reply} \n UI : {ui_reply}"}
