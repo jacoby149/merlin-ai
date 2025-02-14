@@ -223,3 +223,48 @@ async def write_ui(new_app: NewAppContent):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
 
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+import docker
+import tarfile
+import io
+
+# Create a router instance.
+router = APIRouter(prefix="/commands", tags=["commands"])
+
+class NewStyleContent(BaseModel):
+    content: str
+
+@router.post("/write_ui_style")
+async def write_ui_style(new_style: NewStyleContent):
+    """
+    Overwrites the src/App.css file inside the UI container's /app directory with the new content provided.
+    After updating the file, it calls the container_restart_ui() endpoint to restart the UI container.
+    """
+    # Locate the UI container using its Docker Compose service label.
+    client = docker.from_env()
+    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="UI container not found")
+    container = containers[0]
+
+    # Create an in-memory tar archive containing the new src/App.css file.
+    data = new_style.content.encode("utf-8")
+    tarstream = io.BytesIO()
+    with tarfile.open(fileobj=tarstream, mode="w") as tar:
+        tarinfo = tarfile.TarInfo(name="src/App.css")
+        tarinfo.size = len(data)
+        tar.addfile(tarinfo, io.BytesIO(data))
+    tarstream.seek(0)
+
+    # Use put_archive to overwrite the src/App.css file in the /app directory.
+    try:
+        success = container.put_archive(path="/app", data=tarstream.getvalue())
+        if not success:
+            raise HTTPException(status_code=500, detail="Error writing src/App.css to the UI container")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
+
+    # Reuse the existing container_restart_ui() endpoint to restart the UI container.
+    return await container_restart_ui()
+
