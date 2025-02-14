@@ -1,19 +1,22 @@
 MINIMUM FOR RELEASE
 
-Alias @merlinai.cloud emails to @web10.nyc.
-Change Gumroad to merlinai.cloud
+See if the web10.app gumroad problem persists.
+If it does, copy the product stuff, Make a new gumroad account using the merlinai email.
 Finish the gumroad products + publish them.
-Add Get License Button
-Buy my own License for testing. (Personal)
+
 Improve the CSS so I can extend in the future...
 Consolidate the chats to use the same component.
 Dark/Light Mode (GOOD LOOKING)
 
 Product Flow
+  Add Get License Button
+  Buy my own License for testing. (Personal)
+
   Link to Discord
   Link to OpenAI API Key Page
   Add license key verification[Gumroad]
   Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
+  Add OpenAPI key storing [to env or cookies]
   Add Comprehensive Readme With GIFs/Vids
   Make UI that takes the GPT API Key and writes it to the .env
 
@@ -21,7 +24,6 @@ Product Flow
 Add licensing files [MNazar]
 After Legal licenses are added, squash the code into one commit.
 File for a trademark
-Add Token adding to .env from the frontend Interface
 
 V1.0.0!!!! --------------------------------
 
