@@ -64,7 +64,7 @@ function OneChat() {
         }}
       >
         {conversation.length === 0 ? (
-          <p>No messages yet. Say hello!</p>
+          <p>Type what you would like the agent to do fullstack.</p>
         ) : (
           conversation.map((msg, index) => (
             <div key={index} style={{ margin: '0.5rem 0' }}>
