@@ -243,7 +243,7 @@ async def write_file(payload: WriteFilePayload):
             raise HTTPException(status_code=500, detail="Error writing file to container")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
-
+    await container_restart_api()
     return {"message": f"File '{payload.path}' updated in {payload.service.value} container"}
 
 MAIN_PY = "app/main.py"
@@ -251,7 +251,7 @@ APP_JS = "app/src/App.js"
 APP_CSS = "app/src/App.css"
 
 @router.post("/write_main_py")
-async def write_api(content:str):
+async def write_main_py(content:str):
     """
     Overwrites the main.py file inside the API container's /app directory with the new content provided.
     The new main.py content is sent in the request payload. After updating the file, it calls the 
@@ -260,7 +260,7 @@ async def write_api(content:str):
     return await write_file(WriteFilePayload(service=Service.api,path=MAIN_PY,content=content))
 
 @router.post("/write_app_js")
-async def write_ui(content: str):
+async def write_app_js(content: str):
     """
     Overwrites the src/App.js file inside the UI container's /app directory with the new content provided.
     The new src/App.js content is sent in the request payload. After updating the file, it calls the 
@@ -268,8 +268,8 @@ async def write_ui(content: str):
     """
     return await write_file(WriteFilePayload(service=Service.ui,path=APP_JS,content=content))
 
-@router.post("/write_ui_style")
-async def write_ui_style(content:str):
+@router.post("/write_app_css")
+async def write_app_css(content:str):
     """
     Overwrites the src/App.css file inside the UI container's /app directory with the new content provided.
     After updating the file, it calls the container_restart_ui() endpoint to restart the UI container.
@@ -277,26 +277,28 @@ async def write_ui_style(content:str):
     return await write_file(WriteFilePayload(service=Service.ui,path=APP_CSS,content=content))
 
 
-@router.get("/read_ui_style")
-async def read_ui_style():
+@router.get("/read_app_css")
+async def read_app_css():
     """
     Reads the content of src/App.css from the UI container's /app directory and returns it.
     """
     return await write_file(ReadFilePayload(service=Service.ui,path=APP_CSS))
 
-@router.get("/read_ui")
-async def read_ui():
+@router.get("/read_app_js")
+async def read_app_js():
     """
     Reads the content of src/App.js from the UI container's /app directory and returns it.
     """
     return await write_file(ReadFilePayload(service=Service.ui,path=APP_JS))
 
 
-@router.get("/read_api")
-async def read_api():
+@router.get("/read_main_py")
+async def read_main_py():
     """
     Reads the content of main.py from the API container's /app directory and returns it.
     """
     return await write_file(ReadFilePayload(service=Service.api,path=MAIN_PY))
 
+class NewMainContent(BaseModel):
+    content: str
 
