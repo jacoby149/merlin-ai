@@ -119,7 +119,7 @@ async def ui_mod(r:APIModRequest):
     """
     Modifies the App.js file
     """
-    api_preface="Here is a main.py for a fastapi implementation"
+    api_preface="Here is a main.py for a fastapi implementation. it is hosted on port 8000"
     main_py = await read_main_py()
     main_py = main_py["content"]
  
@@ -131,7 +131,7 @@ async def ui_mod(r:APIModRequest):
     code = "Answer with a modified version of App.js surrounded by <|start-code|> and <|end-code|>. the output is being written right over the file!!!!"
     exp = "Anything in the reply not encapsulated in <|start-code|> and <|end-code|> will be shown to a user to explain the changes!"
     prompt = "\n".join([api_preface,main_py,preface,app_js,chat,code,exp])
-    code,reply = ask_api(prompt)
+    code,reply = ask_ui(prompt)
     await write_app_js(code)
     return {"reply":reply}
 
