@@ -282,14 +282,14 @@ async def read_app_css():
     """
     Reads the content of src/App.css from the UI container's /app directory and returns it.
     """
-    return await write_file(ReadFilePayload(service=Service.ui,path=APP_CSS))
+    return await read_file(ReadFilePayload(service=Service.ui,path=APP_CSS))
 
 @router.get("/read_app_js")
 async def read_app_js():
     """
     Reads the content of src/App.js from the UI container's /app directory and returns it.
     """
-    return await write_file(ReadFilePayload(service=Service.ui,path=APP_JS))
+    return await read_file(ReadFilePayload(service=Service.ui,path=APP_JS))
 
 
 @router.get("/read_main_py")
@@ -297,7 +297,7 @@ async def read_main_py():
     """
     Reads the content of main.py from the API container's /app directory and returns it.
     """
-    return await write_file(ReadFilePayload(service=Service.api,path=MAIN_PY))
+    return await read_file(ReadFilePayload(service=Service.api,path=MAIN_PY))
 
 class NewMainContent(BaseModel):
     content: str

@@ -1,5 +1,12 @@
-Spin up 4 containers for the user.
-Set up a VPN tunnel too!
-
-project.ai-api.appmaker.ai
-
+Make UI that takes the GPT API Key and writes it to the .env
+UI V0
+  UI Textbox and API Textbox.
+  "Make an API for a shopping app"
+  "Make a UI for a shopping app"
+  API that has endpoints to write main.py app.js and app.css
+  "UI Has this error : "
+  "API Has this error : "
+UI V1
+  One Textbox, agents to handle the routing.
+V2 -- Selenium???
+V3 -- Run it, with a play pause button, where it autopilots until stopped.
