@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import settings
 import subprocess
+import time
 
 # Initialize the Docker client from the host's Docker socket.
 import docker
@@ -17,95 +18,99 @@ router = APIRouter(prefix="/commands", tags=["commands"])
 @router.post("/container_restart_ui")
 async def container_restart_ui():
     """
-    Restarts the UI container by invoking:
-    docker restart ui
+    Restarts the entire UI container using the Docker SDK. The container is located
+    by filtering on the Docker Compose service label "ui", and then restarted using
+    the Docker API. Note: since this endpoint runs inside the container, the connection
+    may drop when the container stops.
     """
     try:
-        result = subprocess.run(
-            ["docker", "restart", "ui"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return {"message": "UI container restarted", "output": result.stdout.strip()}
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=500, detail=f"Error restarting UI container: {e.stderr}")
+        # Locate the UI container using its Docker Compose service label.
+        containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+        if not containers:
+            raise HTTPException(status_code=404, detail="UI container not found")
+        container = containers[0]
+        
+        # Restart the container.
+        container.restart(timeout=10)
+        
+        return {"message": "UI container restarted"}
+    except docker.errors.DockerException as e:
+        raise HTTPException(status_code=500, detail=f"Error restarting UI container: {e}")
 
 @router.post("/container_restart_api")
 async def container_restart_api():
     """
-    Restarts the API container by invoking:
-    docker restart api
+    Restarts the entire API container using the Docker SDK. The container is located
+    by filtering on the Docker Compose service label "api", and then restarted using
+    the Docker API. Note: since this endpoint runs inside the container, the connection
+    may drop when the container stops.
     """
     try:
-        result = subprocess.run(
-            ["docker", "restart", "api"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return {"message": "API container restarted", "output": result.stdout.strip()}
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=500, detail=f"Error restarting API container: {e.stderr}")
-
-
-# ----- In-Container Process Restart Endpoints -----
-
-@router.post("/restart_ui")
-async def restart_ui():
-    """
-    Restarts the React app running inside the UI container.
-    It first kills the process (using pkill on the npm/react process) and then re-launches it with npm start.
-    """
-    try:
-        # Attempt to kill the running React process. Ignore errors if no matching process is found.
-        subprocess.run(
-            ["docker", "exec", "ui", "pkill", "-f", "npm"],
-            capture_output=True,
-            text=True
-        )
-        # Start the React app in detached mode
-        result = subprocess.run(
-            ["docker", "exec", "-d", "ui", "npm", "start"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return {"message": "React app in UI container restarted", "output": result.stdout.strip()}
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=500, detail=f"Error restarting React app: {e.stderr}")
-
-
-@router.post("/restart_api")
-async def restart_api():
-    """
-    Restarts the FastAPI (uvicorn) process in the API container without stopping the container.
-    It finds the container by the Docker Compose service label, kills any running uvicorn process,
-    and then starts a new one in detached mode.
-    """
-    try:
-        # Locate the container using the Docker Compose service label.
+        # Find the container by the Docker Compose service label.
         containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
         if not containers:
             raise HTTPException(status_code=404, detail="API container not found")
         container = containers[0]
-
-        # Kill any running uvicorn process. This command might return a non-zero exit code if no process is found.
-        kill_result = container.exec_run(["pkill", "-f", "uvicorn"], stdout=True, stderr=True)
-        # (Optional) You can log kill_result.output if needed.
-
-        # Start the FastAPI server using uvicorn in detached mode.
-        # Adjust the command as needed based on your container's setup.
-        container.exec_run(
-            ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"],
-            detach=True
-        )
-
-        return {"message": "FastAPI (uvicorn) restarted in API container"}
+        
+        # Restart the container.
+        container.restart(timeout=10)
+        
+        return {"message": "API container restarted"}
     except docker.errors.DockerException as e:
-        raise HTTPException(status_code=500, detail=f"Error restarting FastAPI: {e}")
+        raise HTTPException(status_code=500, detail=f"Error restarting API container: {e}")
 
-# ----- Log Scanning Endpoints -----
+class Package(BaseModel):
+    name: str
+
+@router.post("/install_restart_api")
+async def install_restart_api(pkg: Package=Package(name="pandas")):
+    """
+    Installs the specified package into the API container's pipenv environment by executing
+    a pipenv install command inside the container. After installation, it calls the existing
+    container_restart_api() endpoint to restart the API container.
+    """
+    # Locate the API container using its Docker Compose service label.
+    containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="API container not found")
+    container = containers[0]
+
+    # Execute pipenv install inside the API container.
+    try:
+        exit_code, output = container.exec_run(cmd=["pipenv", "install", pkg.name])
+        if exit_code != 0:
+            error_output = output.decode('utf-8') if isinstance(output, bytes) else output
+            raise HTTPException(status_code=500, detail=f"Error installing package: {error_output}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during pipenv install in API container: {e}")
+
+    # Call the already defined container_restart_api() endpoint to restart the API container.
+    return await container_restart_api()
+
+@router.post("/install_restart_ui")
+async def install_restart_ui(pkg: Package=Package(name="react-chartjs-2")):
+    """
+    Installs the specified npm package into the UI container's environment by executing
+    an npm install command inside the container. After installation, it calls the already
+    defined container_restart_ui() endpoint to restart the UI container.
+    """
+    # Locate the UI container using its Docker Compose service label.
+    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="UI container not found")
+    container = containers[0]
+
+    # Execute npm install inside the UI container.
+    try:
+        exit_code, output = container.exec_run(cmd=["npm", "install", pkg.name])
+        if exit_code != 0:
+            error_output = output.decode('utf-8') if isinstance(output, bytes) else output
+            raise HTTPException(status_code=500, detail=f"Error installing package: {error_output}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during npm install in UI container: {e}")
+
+    # Reuse the existing container_restart_ui() endpoint to restart the UI container.
+    return await container_restart_ui()
 
 @router.get("/tail_ui_logs")
 async def scan_ui(num_lines: int = 10):
