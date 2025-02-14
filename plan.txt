@@ -1,5 +1,6 @@
 MINIMUM FOR RELEASE
-
+Dark/Light Mode
+Shift Enter on the Form inputs
 Add licensing [Gumroad]
 Add product flow [Gumroad]
 Add license key verification
