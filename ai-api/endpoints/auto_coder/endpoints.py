@@ -24,14 +24,14 @@ async def api_mod(r:APIModRequest):
     preface = "Here is a main.py for a fastapi implementation!"
     main_py = await read_main_py()
     chat = r.chat
-    code = "Answer with a main.py surrounded by $$$ $$$. the output is being loaded right in!!!!"
+    code = "Answer with a modified version of main.py surrounded by $$$ $$$. the output is being written right over the file!!!!"
     exp = "Anything in the reply not encapsulated in $$$ $$$ will be shown to a user to explain the changes!"
     prompt = "\n".join([preface,main_py,chat,code,exp])
     code,reply = ask(prompt)
     await write_main_py(code)
     return reply
 
-@router.post("/api_mod")
+@router.post("/ui_mod")
 async def ui_mod(r:APIModRequest):
     """
     Modifies the main.py file

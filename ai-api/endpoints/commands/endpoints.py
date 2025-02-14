@@ -180,13 +180,13 @@ async def read_file(payload:ReadFilePayload):
 
     try:
         # Get the archive for the specified file.
-        stream, stat = container.get_archive(path)
+        stream, stat = container.get_archive(payload.path)
         file_bytes = b"".join(stream)
         file_like_object = io.BytesIO(file_bytes)
         with tarfile.open(fileobj=file_like_object, mode="r:*") as tar:
             names = tar.getnames()
             # Try to match the expected file (using its basename) if possible.
-            base_name = os.path.basename(path)
+            base_name = os.path.basename(payload.path)
             if base_name in names:
                 member = tar.getmember(base_name)
             elif names:

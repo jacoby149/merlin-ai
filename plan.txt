@@ -1,5 +1,6 @@
 Make UI that takes the GPT API Key and writes it to the .env
-UI V0
+Make a licensing system $5 for employees, free for personal, email for big orgs.
+UI V1
   UI Textbox and API Textbox.
   "Make an API for a shopping app"
   "Make a UI for a shopping app"
