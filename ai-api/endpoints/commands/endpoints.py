@@ -188,3 +188,38 @@ async def write_api(new_main: NewMainContent):
 
     # Call the existing container_restart_api() endpoint to restart the API container.
     return await container_restart_api()
+
+class NewAppContent(BaseModel):
+    content: str
+
+@router.post("/write_ui")
+async def write_ui(new_app: NewAppContent):
+    """
+    Overwrites the src/App.js file inside the UI container's /app directory with the new content provided.
+    The new src/App.js content is sent in the request payload. After updating the file, it calls the 
+    container_restart_ui() endpoint to restart the UI container.
+    """
+    # Locate the UI container using its Docker Compose service label.
+    client = docker.from_env()
+    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="UI container not found")
+    container = containers[0]
+
+    # Create an in-memory tar archive containing the new src/App.js file.
+    data = new_app.content.encode("utf-8")
+    tarstream = io.BytesIO()
+    with tarfile.open(fileobj=tarstream, mode="w") as tar:
+        tarinfo = tarfile.TarInfo(name="src/App.js")
+        tarinfo.size = len(data)
+        tar.addfile(tarinfo, io.BytesIO(data))
+    tarstream.seek(0)
+
+    # Use put_archive to overwrite the src/App.js file in the /app directory.
+    try:
+        success = container.put_archive(path="/app", data=tarstream.getvalue())
+        if not success:
+            raise HTTPException(status_code=500, detail="Error writing src/App.js to the UI container")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
+
