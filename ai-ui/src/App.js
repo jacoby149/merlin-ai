@@ -1,29 +1,36 @@
 
-// App.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatAppDemo from './ChatAppDemo';
 import TwoChats from './TwoChats';
 import OneChat from './OneChat';
 
 function App() {
   const [view, setView] = useState('TwoChats');
-
-  // License state
   const [licenseKey, setLicenseKey] = useState('');
   const [licenseActivated, setLicenseActivated] = useState(false);
-
-  // ChatGPT Token state
   const [chatgptToken, setChatgptToken] = useState('');
   const [tokenValid, setTokenValid] = useState(false);
-
-  // ChatGPT Model Dropdown state
   const [selectedModel, setSelectedModel] = useState('4o-mini');
   const [selectedEngine, setSelectedEngine] = useState('ChatGPT');
+  const [isDarkMode, setIsDarkMode] = useState(false); // New state for dark mode
+
+  useEffect(() => {
+    // Check for saved theme preference in local storage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save the theme preference in local storage
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    document.body.style.backgroundColor = isDarkMode ? '#121212' : '#ffffff';
+    document.body.style.color = isDarkMode ? '#ffffff' : '#000000';
+  }, [isDarkMode]);
 
   const renderView = () => {
     switch (view) {
-      // case 'ChatAppDemo':
-      //   return <ChatAppDemo />;
       case 'TwoChats':
         return <TwoChats />;
       case 'OneChat':
@@ -34,7 +41,6 @@ function App() {
   };
 
   const handleLicenseSubmit = () => {
-    // Example: Activate license if key is non-empty.
     if (licenseKey.trim() !== '') {
       setLicenseActivated(true);
     } else {
@@ -50,7 +56,6 @@ function App() {
   };
 
   const handleTokenSubmit = () => {
-    // Example validation: token is valid if it starts with "sk-"
     if (chatgptToken.trim().startsWith('sk-')) {
       setTokenValid(true);
     } else {
@@ -66,21 +71,13 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
       <header style={styles.topbar}>
         <div style={styles.leftSection}>
-          <div style={styles.brand}><img src="/Merlin-no-back-small.png" style={{ height: "20px", width: "auto" , marginRight:"5px", marginLeft:"-5px"
-          }} /> Merlin AI </div>
+          <div style={styles.brand}><img src="/Merlin-no-back-small.png" style={{ height: "20px", width: "auto", marginRight: "5px", marginLeft: "-5px" }} /> Merlin AI </div>
           <nav style={styles.nav}>
-            {/* <button style={styles.button} onClick={() => setView('ChatAppDemo')}>
-              ChatAppDemo
-            </button> */}
-            <button style={styles.button} onClick={() => setView('TwoChats')}>
-              TwoChats
-            </button>
-            <button style={styles.button} onClick={() => setView('OneChat')}>
-              OneChat 
-            </button>
+            <button style={styles.button} onClick={() => setView('TwoChats')}>TwoChats</button>
+            <button style={styles.button} onClick={() => setView('OneChat')}>OneChat</button>
           </nav>
         </div>
         <div style={styles.dropdownContainer}>
@@ -90,9 +87,7 @@ function App() {
             onChange={(e) => setSelectedEngine(e.target.value)}
           >
             <option value="ChatGPT">ChatGPT</option>
-            <option value="Deepseek" disabled>
-              Deepseek (TBD)
-            </option>
+            <option value="Deepseek" disabled>Deepseek (TBD)</option>
           </select>
 
           <select
@@ -106,6 +101,9 @@ function App() {
             <option value="o3-mini-high">o3-mini-high</option>
           </select>
         </div>
+        <button style={styles.toggleButton} onClick={() => setIsDarkMode(prev => !prev)}>
+          {isDarkMode ? '🌙' : '☀️'} {/* Sun or Moon emoji */}
+        </button>
       </header>
 
       {/* Configuration Section: License (left) & ChatGPT Token (right) */}
@@ -120,9 +118,7 @@ function App() {
             onKeyDown={handleLicenseKeyDown}
             style={styles.smallInput}
           />
-          <button style={styles.smallButton} onClick={handleLicenseSubmit}>
-            Submit
-          </button>
+          <button style={styles.smallButton} onClick={handleLicenseSubmit}>Submit</button>
           <div
             style={{
               ...styles.statusText,
@@ -143,9 +139,7 @@ function App() {
             onKeyDown={handleTokenKeyDown}
             style={styles.smallInput}
           />
-          <button style={styles.smallButton} onClick={handleTokenSubmit}>
-            Submit
-          </button>
+          <button style={styles.smallButton} onClick={handleTokenSubmit}>Submit</button>
           <div
             style={{
               ...styles.statusText,
@@ -221,7 +215,6 @@ const styles = {
     margin: '20px 20px',
     flexWrap: 'wrap',
   },
-  // License and Token Styles (smaller inputs/buttons)
   licenseContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -252,6 +245,13 @@ const styles = {
     fontSize: '0.8rem',
     fontStyle: 'italic',
     margin: '0 5px',
+  },
+  toggleButton: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    color: '#FFF',
   },
 };
 

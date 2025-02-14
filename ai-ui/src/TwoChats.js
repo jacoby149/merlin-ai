@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 
-// ChatBox component accepts an `apiEndpoint` prop to customize the API route.
-function ChatBox({ apiEndpoint, title = "Chat with OpenAI" ,message="No messages yet. Say hello!"}) {
+function ChatBox({ apiEndpoint, title = "Chat with OpenAI" , message="No messages yet. Say hello!"}) {
   const [inputMessage, setInputMessage] = useState('');
   const [conversation, setConversation] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ function ChatBox({ apiEndpoint, title = "Chat with OpenAI" ,message="No messages
       const response = await fetch(`${API_BASE_URL}${apiEndpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({chat: inputMessage,context:"" }),
+        body: JSON.stringify({ chat: inputMessage, context: "" }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
@@ -39,6 +38,20 @@ function ChatBox({ apiEndpoint, title = "Chat with OpenAI" ,message="No messages
       setError(`Error: ${err.message}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle input change and add newline when Shift + Enter is pressed
+  const handleInputChange = (e) => {
+    if (e.key === 'Enter' && e.shiftKey) {
+      // Allow a newline to be added without submitting the form
+      return
+    } else if (e.key === 'Enter') {
+      // If just Enter is pressed, send the message
+      handleSend(e);
+    } else {
+      // Update input message on other key presses
+      setInputMessage(e.target.value);
     }
   };
 
@@ -78,12 +91,18 @@ function ChatBox({ apiEndpoint, title = "Chat with OpenAI" ,message="No messages
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <form onSubmit={handleSend} style={{ marginTop: '1rem', display: 'flex' }}>
-        <input
-          type="text"
+        <textarea
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={handleInputChange}
           placeholder="Type your message..."
-          style={{ flex: 1, padding: '0.5rem', fontSize: '1rem' }}
+          style={{
+            flex: 1,
+            padding: '0.5rem',
+            fontSize: '1rem',
+            resize: 'none',
+            height:'18px'
+          }}
         />
         <button type="submit" disabled={loading} style={{ padding: '0.5rem 1rem', marginLeft: '0.5rem' }}>
           {loading ? 'Sending...' : 'Send'}
@@ -93,8 +112,6 @@ function ChatBox({ apiEndpoint, title = "Chat with OpenAI" ,message="No messages
   );
 }
 
-// TwoChats container component renders two ChatBox components side by side.
-// Each ChatBox is configured to use a different API endpoint.
 function TwoChats() {
   return (
     <div
