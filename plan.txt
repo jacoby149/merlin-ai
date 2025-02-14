@@ -1,28 +1,38 @@
 MINIMUM FOR RELEASE
+
+Alias @merlinai.cloud emails to @web10.nyc.
+Change Gumroad to merlinai.cloud
+Finish the gumroad products + publish them.
+Add Get License Button
+Buy my own License for testing. (Personal)
+Improve the CSS so I can extend in the future...
+Consolidate the chats to use the same component.
 Dark/Light Mode (GOOD LOOKING)
-Shift Enter on the Form inputs
-Add licensing [Gumroad]
-Add product flow [Gumroad]
-Add license key verification
+
+Product Flow
+  Link to Discord
+  Link to OpenAI API Key Page
+  Add license key verification[Gumroad]
+  Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
+  Add Comprehensive Readme With GIFs/Vids
+  Make UI that takes the GPT API Key and writes it to the .env
+
+
 Add licensing files [MNazar]
 After Legal licenses are added, squash the code into one commit.
-Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
 File for a trademark
 Add Token adding to .env from the frontend Interface
-Add Comprehensive Readme With GIFs
-Add a tutorial Video
-Make UI that takes the GPT API Key and writes it to the .env
-Make a licensing system $5 for employees, free for personal, email for big orgs.
 
-2.
-UI V1
-  UI Textbox and API Textbox.
-  "Make an API for a shopping app"
-  "Make a UI for a shopping app"
-  API that has endpoints to write main.py app.js and app.css
-  "UI Has this error : "
-  "API Has this error : "
-UI V1
-  One Textbox, agents to handle the routing.
-V2 -- Selenium???
-V3 -- Run it, with a play pause button, where it autopilots until stopped.
+V1.0.0!!!! --------------------------------
+
+Updating CSS?
+Install libraries on itself and restart???
+Selenium???
+Run it, with a play pause button? 
+where it autopilots until stopped.
+Writing Multiple files???
+
+V2.0.0!!!! --------------------------------
+
+Hosting for dummies?
+AWS?
