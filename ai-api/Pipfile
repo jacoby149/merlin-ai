@@ -8,6 +8,7 @@ gunicorn = "*"
 fastapi = "*"
 openai = "*"
 uvicorn = "*"
+docker = "*"
 
 [dev-packages]
 

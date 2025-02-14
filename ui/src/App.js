@@ -7,8 +7,10 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Auto Code This UI <br/>
-          Visit <code>localhost:3001</code> to code this app automatically.
+          <b>Auto Code This UI</b> <br/><br/>
+          1. Visit <code>localhost:3001</code> <br/>
+          2. Ask for features using the AI chat <br/>
+          3. Code this app automatically!
         </p>
         <a
           className="App-link"
