@@ -129,7 +129,7 @@ async def chat_endpoint(req: ChatRequest):
     # Call the OpenAI API using the conversation history.
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # or any available model
+            model="gpt-4o-mini",  # or any available model
             messages=conversation_history
         )
     except Exception as e:
