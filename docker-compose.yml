@@ -11,8 +11,6 @@ services:
     volumes:
       - ./ai-api:/app  # Mount the api folder into the container for hot refresh
       - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
-    env_file:
-      - .ai-api-env
   ai-ui:
     build:
       context: ./ai-ui
@@ -31,8 +29,6 @@ services:
       - "8000:8000"
     volumes:
       - ./api:/app  # Mount the api folder into the container for hot refresh
-    env_file:
-      - .api-env
   ui:
     build:
       context: ./ui
