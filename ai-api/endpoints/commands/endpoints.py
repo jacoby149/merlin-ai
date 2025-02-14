@@ -6,9 +6,11 @@ from pydantic import BaseModel
 import tarfile
 import io
 import settings
-
+import os
 # Initialize the Docker client from the host's Docker socket.
 import docker
+from enum import Enum
+
 client = docker.from_env()
 
 
@@ -151,222 +153,150 @@ async def scan_api(num_lines: int = 10):
     except docker.errors.DockerException as e:
         raise HTTPException(status_code=500, detail=f"Error fetching API logs: {e}")
 
-class NewMainContent(BaseModel):
+
+class Service(str, Enum):
+    ui = "ui"
+    api = "api"
+
+class ReadFilePayload(BaseModel):
+    service: Service
+    path: str
+
+
+@router.get("/read")
+async def read_file(payload:ReadFilePayload):
+    """
+    Reads the content of a file from a container.
+    
+    Query parameters:
+      - service: the Docker Compose service name (e.g., 'api' or 'ui')
+      - path: the absolute path of the file in the container (e.g., '/app/main.py')
+    """
+    client = docker.from_env()
+    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service.value}"})
+    if not containers:
+        raise HTTPException(status_code=404, detail=f"{payload.service.value} container not found")
+    container = containers[0]
+
+    try:
+        # Get the archive for the specified file.
+        stream, stat = container.get_archive(path)
+        file_bytes = b"".join(stream)
+        file_like_object = io.BytesIO(file_bytes)
+        with tarfile.open(fileobj=file_like_object, mode="r:*") as tar:
+            names = tar.getnames()
+            # Try to match the expected file (using its basename) if possible.
+            base_name = os.path.basename(path)
+            if base_name in names:
+                member = tar.getmember(base_name)
+            elif names:
+                # Fallback: use the first file found.
+                member = tar.getmember(names[0])
+            else:
+                raise HTTPException(status_code=500, detail="No files found in tar archive")
+            file_obj = tar.extractfile(member)
+            if file_obj is None:
+                raise HTTPException(status_code=500, detail="Error extracting file from archive")
+            content = file_obj.read().decode("utf-8")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading file from {payload.service.value} container: {e}")
+
+    return {"content": content}
+
+class WriteFilePayload(BaseModel):
+    service: Service
+    path: str
     content: str
 
+@router.post("/write")
+async def write_file(payload: WriteFilePayload):
+    """
+    Overwrites a file in a container with new content.
+    
+    Payload:
+      - service: the Docker Compose service name (e.g., 'api' or 'ui')
+      - path: the absolute path of the file in the container (e.g., '/app/main.py')
+      - content: the new content for the file.
+    """
+    client = docker.from_env()
+    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service.value}"})
+    if not containers:
+        raise HTTPException(status_code=404, detail=f"{payload.service.value} container not found")
+    container = containers[0]
 
-@router.post("/write_api")
-async def write_api(new_main: NewMainContent):
+    # Split the given path into directory and file name.
+    directory = os.path.dirname(payload.path)
+    file_name = os.path.basename(payload.path)
+
+    # Create an in-memory tar archive containing the new file.
+    data = payload.content.encode("utf-8")
+    tarstream = io.BytesIO()
+    with tarfile.open(fileobj=tarstream, mode="w") as tar:
+        tarinfo = tarfile.TarInfo(name=file_name)
+        tarinfo.size = len(data)
+        tar.addfile(tarinfo, io.BytesIO(data))
+    tarstream.seek(0)
+
+    try:
+        success = container.put_archive(path=directory, data=tarstream.getvalue())
+        if not success:
+            raise HTTPException(status_code=500, detail="Error writing file to container")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
+
+    return {"message": f"File '{payload.path}' updated in {payload.service.value} container"}
+
+MAIN_PY = "app/main.py"
+APP_JS = "app/src/App.js"
+APP_CSS = "app/src/App.css"
+
+@router.post("/write_main_py")
+async def write_api(content:str):
     """
     Overwrites the main.py file inside the API container's /app directory with the new content provided.
     The new main.py content is sent in the request payload. After updating the file, it calls the 
     container_restart_api() endpoint to restart the API container.
     """
-    # Locate the API container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="API container not found")
-    container = containers[0]
+    return await write_file(WriteFilePayload(service=Service.api,path=MAIN_PY,content=content))
 
-    # Create an in-memory tar archive containing the new main.py file.
-    data = new_main.content.encode("utf-8")
-    tarstream = io.BytesIO()
-    with tarfile.open(fileobj=tarstream, mode="w") as tar:
-        tarinfo = tarfile.TarInfo(name="main.py")
-        tarinfo.size = len(data)
-        tar.addfile(tarinfo, io.BytesIO(data))
-    tarstream.seek(0)
-
-    # Use put_archive to overwrite the main.py file in the /app directory.
-    try:
-        success = container.put_archive(path="/app", data=tarstream.getvalue())
-        if not success:
-            raise HTTPException(status_code=500, detail="Error writing main.py to the API container")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
-
-    # Call the existing container_restart_api() endpoint to restart the API container.
-    return await container_restart_api()
-
-class NewAppContent(BaseModel):
-    content: str
-
-@router.post("/write_ui")
-async def write_ui(new_app: NewAppContent):
+@router.post("/write_app_js")
+async def write_ui(content: str):
     """
     Overwrites the src/App.js file inside the UI container's /app directory with the new content provided.
     The new src/App.js content is sent in the request payload. After updating the file, it calls the 
     container_restart_ui() endpoint to restart the UI container.
     """
-    # Locate the UI container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="UI container not found")
-    container = containers[0]
-
-    # Create an in-memory tar archive containing the new src/App.js file.
-    data = new_app.content.encode("utf-8")
-    tarstream = io.BytesIO()
-    with tarfile.open(fileobj=tarstream, mode="w") as tar:
-        tarinfo = tarfile.TarInfo(name="src/App.js")
-        tarinfo.size = len(data)
-        tar.addfile(tarinfo, io.BytesIO(data))
-    tarstream.seek(0)
-
-    # Use put_archive to overwrite the src/App.js file in the /app directory.
-    try:
-        success = container.put_archive(path="/app", data=tarstream.getvalue())
-        if not success:
-            raise HTTPException(status_code=500, detail="Error writing src/App.js to the UI container")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
-
-
-class NewStyleContent(BaseModel):
-    content: str
+    return await write_file(WriteFilePayload(service=Service.ui,path=APP_JS,content=content))
 
 @router.post("/write_ui_style")
-async def write_ui_style(new_style: NewStyleContent):
+async def write_ui_style(content:str):
     """
     Overwrites the src/App.css file inside the UI container's /app directory with the new content provided.
     After updating the file, it calls the container_restart_ui() endpoint to restart the UI container.
     """
-    # Locate the UI container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="UI container not found")
-    container = containers[0]
+    return await write_file(WriteFilePayload(service=Service.ui,path=APP_CSS,content=content))
 
-    # Create an in-memory tar archive containing the new src/App.css file.
-    data = new_style.content.encode("utf-8")
-    tarstream = io.BytesIO()
-    with tarfile.open(fileobj=tarstream, mode="w") as tar:
-        tarinfo = tarfile.TarInfo(name="src/App.css")
-        tarinfo.size = len(data)
-        tar.addfile(tarinfo, io.BytesIO(data))
-    tarstream.seek(0)
-
-    # Use put_archive to overwrite the src/App.css file in the /app directory.
-    try:
-        success = container.put_archive(path="/app", data=tarstream.getvalue())
-        if not success:
-            raise HTTPException(status_code=500, detail="Error writing src/App.css to the UI container")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
-
-    # Reuse the existing container_restart_ui() endpoint to restart the UI container.
-    return await container_restart_ui()
 
 @router.get("/read_ui_style")
 async def read_ui_style():
     """
     Reads the content of src/App.css from the UI container's /app directory and returns it.
     """
-    # Locate the UI container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="UI container not found")
-    container = containers[0]
-
-    try:
-        # Get the archive for the file /app/src/App.css
-        stream, stat = container.get_archive("/app/src/App.css")
-        file_bytes = b"".join(stream)
-        file_like_object = io.BytesIO(file_bytes)
-        # Open the tar archive.
-        with tarfile.open(fileobj=file_like_object, mode="r:*") as tar:
-            # List all file names in the tar archive.
-            names = tar.getnames()
-            # Try to locate the expected file name.
-            if "src/App.css" in names:
-                member = tar.getmember("src/App.css")
-            elif names:
-                # Fallback: use the first file in the archive.
-                member = tar.getmember(names[0])
-            else:
-                raise HTTPException(status_code=500, detail="No files found in tar archive")
-            file_obj = tar.extractfile(member)
-            if file_obj is None:
-                raise HTTPException(status_code=500, detail="Error extracting file from archive")
-            content = file_obj.read().decode("utf-8")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading src/App.css from UI container: {e}")
-
-    return {"content": content}
+    return await write_file(ReadFilePayload(service=Service.ui,path=APP_CSS))
 
 @router.get("/read_ui")
 async def read_ui():
     """
     Reads the content of src/App.js from the UI container's /app directory and returns it.
     """
-    # Locate the UI container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="UI container not found")
-    container = containers[0]
+    return await write_file(ReadFilePayload(service=Service.ui,path=APP_JS))
 
-    try:
-        # Get the archive for the file /app/src/App.js.
-        stream, stat = container.get_archive("/app/src/App.js")
-        file_bytes = b"".join(stream)
-        file_like_object = io.BytesIO(file_bytes)
-        # Open the tar archive.
-        with tarfile.open(fileobj=file_like_object, mode="r:*") as tar:
-            names = tar.getnames()
-            # Try to locate the expected file name.
-            if "src/App.js" in names:
-                member = tar.getmember("src/App.js")
-            elif names:
-                # Fallback: use the first file in the archive.
-                member = tar.getmember(names[0])
-            else:
-                raise HTTPException(status_code=500, detail="No files found in tar archive")
-            file_obj = tar.extractfile(member)
-            if file_obj is None:
-                raise HTTPException(status_code=500, detail="Error extracting file from archive")
-            content = file_obj.read().decode("utf-8")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading src/App.js from UI container: {e}")
-
-    return {"content": content}
 
 @router.get("/read_api")
 async def read_api():
     """
     Reads the content of main.py from the API container's /app directory and returns it.
     """
-    # Locate the API container using its Docker Compose service label.
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
-    if not containers:
-        raise HTTPException(status_code=404, detail="API container not found")
-    container = containers[0]
+    return await write_file(ReadFilePayload(service=Service.api,path=MAIN_PY))
 
-    try:
-        # Get the archive for the file /app/main.py.
-        stream, stat = container.get_archive("/app/main.py")
-        file_bytes = b"".join(stream)
-        file_like_object = io.BytesIO(file_bytes)
-        # Open the tar archive.
-        with tarfile.open(fileobj=file_like_object, mode="r:*") as tar:
-            names = tar.getnames()
-            # Try to locate "main.py" or fallback to the first file in the archive.
-            if "main.py" in names:
-                member = tar.getmember("main.py")
-            elif names:
-                member = tar.getmember(names[0])
-            else:
-                raise HTTPException(status_code=500, detail="No files found in tar archive")
-            file_obj = tar.extractfile(member)
-            if file_obj is None:
-                raise HTTPException(status_code=500, detail="Error extracting file from archive")
-            content = file_obj.read().decode("utf-8")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading main.py from API container: {e}")
 
-    return {"content": content}
