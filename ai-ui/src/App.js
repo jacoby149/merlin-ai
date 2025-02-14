@@ -69,7 +69,8 @@ function App() {
     <div className="App">
       <header style={styles.topbar}>
         <div style={styles.leftSection}>
-          <div style={styles.brand}>Merlin AI <img src="/Merlin-no-back-small.png" style={{ height: "32px", width: "auto" , marginLeft:"5px"}} /></div>
+          <div style={styles.brand}><img src="/Merlin-no-back-small.png" style={{ height: "20px", width: "auto" , marginRight:"5px", marginLeft:"-5px"
+          }} /> Merlin AI </div>
           <nav style={styles.nav}>
             {/* <button style={styles.button} onClick={() => setView('ChatAppDemo')}>
               ChatAppDemo

@@ -5,6 +5,7 @@ Add licensing [Gumroad]
 Add product flow [Gumroad]
 Add license key verification
 Add licensing files [MNazar]
+After Legal licenses are added, squash the code into one commit.
 Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
 File for a trademark
 Add Token adding to .env from the frontend Interface
