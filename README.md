@@ -8,6 +8,7 @@ Merlin AI is a template repository that you can copy to make full stack apps wit
 
 <center>Hi! I'm Merlin, I am a sick fullstack developer!!!</center>
 
+
 <u>What Merlin Will Do : </u>
 
 * Merlin will code your frontend for you. Just chat with Merlin
