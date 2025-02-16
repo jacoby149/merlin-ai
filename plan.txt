@@ -17,7 +17,7 @@ Making Changes ...
 
 Product Flow (Approx 2 HRs?)
   Fontawesome?
-  Add Get License Button
+  Add Get License Button https://merlinlicenses.gumroad.com/
   Buy my own License for testing. (Personal)
   Link to Discord
   Link to OpenAI API Key Page
