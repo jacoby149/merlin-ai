@@ -3,3 +3,4 @@
 .ui-env
 .api-env
 **.DS_Store
+ai-ui/node_modules

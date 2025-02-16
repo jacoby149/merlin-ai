@@ -1,0 +1,153 @@
+
+/* --- Topbar & Navigation --- */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* Glassy/neon background */
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.brand-logo {
+  height: 20px;
+  margin-right: 5px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 0;
+  position: relative;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Neon text glow on hover */
+.nav-link:hover {
+  color: #0ff;
+  text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+}
+
+/* Underline effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Dropdown Menus */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 0;
+  min-width: 150px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  z-index: 100;
+}
+
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(0, 255, 255, 0.1);
+  color: #0ff;
+}
+
+/* Show dropdown on hover */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* --- Homepage Layout --- */
+
+
+.homepage-content {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  gap: 2rem;               /* Optional spacing between the two */
+  height: calc(100vh - 80px); /* Adjust this based on your topbar height */
+}
+
+.leftPane,
+.rightPane {
+  width: 500px;   /* Set a fixed width */
+  height: 480px;  /* Set a fixed height */
+}
+
+/* Ensure the iframe fills its container */
+.iframeDemo {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* --- Floating Button & Bottom Icons --- */
+
+/* (Keep your existing neon-styled Purchase License Button & bottomIconsContainer styles.) */
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}

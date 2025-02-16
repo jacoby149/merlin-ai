@@ -27,8 +27,13 @@ function App() {
   }, [isDarkMode]);
 
   const renderView = () => {
+    switch (UIMode) {
+    case "Web":
     return <TwoChats />;
-  };
+    default:
+      return <div>Invalid Type</div>;
+  }
+};
 
   const handleLicenseSubmit = () => {
     if (licenseKey.trim() !== '') {
