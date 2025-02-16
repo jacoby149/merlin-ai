@@ -16,7 +16,7 @@ Explain Merlin AI here
 
 ### Steps
 
-[![Copy the template click me!](https://img.shields.io/badge/Copy%20The%20Template%20Click%20Me!)](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
+[![Copy the template click me!]](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
 
 1. **Create or Download Your Repository:**  
    - **Self-Clone with Template:**  
