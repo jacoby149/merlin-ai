@@ -1,10 +1,7 @@
 MINIMUM FOR RELEASE
 
 Approx - 1HR
-Improve the CSS so I can extend in the future...
-Consolidate the chats to use the same component.
 Dark/Light Mode (GOOD LOOKING)
-Make it look good on smaller screens.
 
 Product Flow (Approx 2 HRs?)
   Fontawesome?

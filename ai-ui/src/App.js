@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import TwoChats from './TwoChats';
 import OneChat from './OneChat';
+import './App.css';
 
 function App() {
   const [UIMode, setUIMode] = useState('Web');
@@ -11,7 +12,7 @@ function App() {
   const [tokenValid, setTokenValid] = useState(false);
   const [selectedModel, setSelectedModel] = useState('4o-mini');
   const [selectedEngine, setSelectedEngine] = useState('ChatGPT');
-  const [isDarkMode, setIsDarkMode] = useState(false); // New state for dark mode
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     // Check for saved theme preference in local storage
@@ -24,8 +25,6 @@ function App() {
   useEffect(() => {
     // Save the theme preference in local storage
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    document.body.style.backgroundColor = isDarkMode ? '#121212' : '#ffffff';
-    document.body.style.color = isDarkMode ? '#ffffff' : '#000000';
   }, [isDarkMode]);
 
   const renderView = () => {
@@ -64,28 +63,34 @@ function App() {
 
   return (
     <div className={`App ${isDarkMode ? 'dark' : 'light'}`}>
-      <header style={styles.topbar}>
-        <div style={styles.leftSection}>
-          <div style={styles.brand}><img src="/Merlin-no-back-small.png" style={{ height: "20px", width: "auto", marginRight: "5px", marginLeft: "-5px" }} /> Merlin AI </div>
-          <nav style={styles.nav}>
-            <button style={styles.button} onClick={() => setUIMode('Web')}>Web</button>
-            <button style={styles.button} onClick={() => setUIMode('Mobile')} disabled={true} >Mobile</button>
+      <header className="topbar">
+        <div className="leftSection">
+          <div className="brand">
+            <img src="/Merlin-no-back-small.png" alt="Merlin logo" className="brand-logo" /> Merlin AI
+          </div>
+          <nav className="nav">
+            <button className="button" onClick={() => setUIMode('Web')}>Web</button>
+            <button className="button" onClick={() => setUIMode('Mobile')} disabled>
+              Mobile
+            </button>
           </nav>
         </div>
-        <div style={styles.dropdownContainer}>
+        <div className="dropdownContainer">
           <select
-            style={styles.engineDropdown}
+            className="engineDropdown"
             value={selectedEngine}
             onChange={(e) => setSelectedEngine(e.target.value)}
           >
             <option value="ChatGPT">ChatGPT</option>
-            <option value="Deepseek" disabled>Deepseek (TBD)</option>
+            <option value="Deepseek" disabled>
+              Deepseek (TBD)
+            </option>
           </select>
 
           <select
+            className="modelDropdown"
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            style={styles.modelDropdown}
           >
             <option value="4o">4o</option>
             <option value="4o-mini">4o-mini</option>
@@ -93,159 +98,54 @@ function App() {
             <option value="o3-mini-high">o3-mini-high</option>
           </select>
         </div>
-        <button style={styles.toggleButton} onClick={() => setIsDarkMode(prev => !prev)}>
-          {isDarkMode ? '🌙' : '☀️'} {/* Sun or Moon emoji */}
+        <button className="toggleButton" onClick={() => setIsDarkMode(prev => !prev)}>
+          {isDarkMode ? '🌙' : '☀️'}
         </button>
       </header>
 
       {/* Configuration Section: License (left) & ChatGPT Token (right) */}
-      <div style={styles.configContainer}>
+      <div className="configContainer">
         {/* License Section */}
-        <div style={styles.licenseContainer}>
+        <div className="licenseContainer">
           <input
             type="password"
             placeholder="License key"
             value={licenseKey}
             onChange={(e) => setLicenseKey(e.target.value)}
             onKeyDown={handleLicenseKeyDown}
-            style={styles.smallInput}
+            className="smallInput"
           />
-          <button style={styles.smallButton} onClick={handleLicenseSubmit}>Submit</button>
-          <div
-            style={{
-              ...styles.statusText,
-              color: licenseActivated ? '#2E8B57' : '#FFBF00',
-            }}
-          >
+          <button className="smallButton" onClick={handleLicenseSubmit}>
+            Submit
+          </button>
+          <div className={`statusText ${licenseActivated ? 'activated' : 'notActivated'}`}>
             {licenseActivated ? 'License Activated' : 'License Not Activated'}
           </div>
         </div>
 
         {/* ChatGPT Token Section */}
-        <div style={styles.tokenContainer}>
+        <div className="tokenContainer">
           <input
             type="password"
             placeholder="OpenAI token"
             value={chatgptToken}
             onChange={(e) => setChatgptToken(e.target.value)}
             onKeyDown={handleTokenKeyDown}
-            style={styles.smallInput}
+            className="smallInput"
           />
-          <button style={styles.smallButton} onClick={handleTokenSubmit}>Submit</button>
-          <div
-            style={{
-              ...styles.statusText,
-              textAlign: 'right',
-              color: tokenValid ? '#2E8B57' : '#FFBF00',
-            }}
-          >
+          <button className="smallButton" onClick={handleTokenSubmit}>
+            Submit
+          </button>
+          <div className={`statusText textRight ${tokenValid ? 'activated' : 'notActivated'}`}>
             {tokenValid ? 'Valid OpenAI Token' : 'Invalid OpenAI Token'}
           </div>
         </div>
       </div>
 
-      <main style={styles.content}>{renderView()}</main>
+      <main className="content">{renderView()}</main>
     </div>
   );
 }
-
-// Inline styles
-const styles = {
-  topbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#282c34',
-    padding: '10px 20px',
-    color: 'white',
-    flexWrap: 'wrap',
-  },
-  leftSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px',
-  },
-  brand: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-  },
-  nav: {
-    display: 'flex',
-    gap: '10px',
-  },
-  dropdownContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-  button: {
-    padding: '8px 12px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '4px',
-  },
-  engineDropdown: {
-    padding: '6px 10px',
-    fontSize: '0.9rem',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-  },
-  modelDropdown: {
-    padding: '6px 10px',
-    fontSize: '0.9rem',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-  },
-  content: {
-    padding: '20px',
-  },
-  configContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: '20px 20px',
-    flexWrap: 'wrap',
-  },
-  licenseContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  tokenContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  smallInput: {
-    padding: '4px 6px',
-    fontSize: '0.8rem',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    width: '120px',
-  },
-  smallButton: {
-    padding: '4px 6px',
-    fontSize: '0.8rem',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '4px',
-    backgroundColor: '#007BFF',
-    color: 'white',
-  },
-  statusText: {
-    fontSize: '0.8rem',
-    fontStyle: 'italic',
-    margin: '0 5px',
-  },
-  toggleButton: {
-    background: 'transparent',
-    border: 'none',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    color: '#FFF',
-  },
-};
 
 export default App;
 

@@ -1,38 +1,159 @@
-.App {
-  text-align: center;
+
+/* Dark and Light Mode Styles */
+.App.dark {
+  background-color: #121212;
+  color: #ffffff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App.light {
+  background-color: #ffffff;
+  color: #000000;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Top Bar */
+.topbar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #282c34;
+  padding: 10px 20px;
+  color: white;
+  flex-wrap: wrap;
+}
+
+/* Left Section */
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Brand */
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.brand-logo {
+  height: 20px;
+  width: auto;
+  margin-right: 5px;
+  margin-left: -5px;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 10px;
+}
+
+/* Dropdown Container */
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Buttons */
+.button {
+  padding: 8px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+/* Dropdown Selects */
+.engineDropdown,
+.modelDropdown {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Content Area */
+.content {
+  padding: 20px;
+}
+
+/* Configuration Container */
+.configContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  flex-wrap: wrap;
+}
+
+/* License & Token Containers */
+.licenseContainer,
+.tokenContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Small Input */
+.smallInput {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 120px;
+}
+
+/* Small Button */
+.smallButton {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Status Text */
+.statusText {
+  font-size: 0.8rem;
+  font-style: italic;
+  margin: 0 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Toggle Button */
+.toggleButton {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Additional Classes */
+.textRight {
+  text-align: right;
+}
+
+.activated {
+  color: #2E8B57;
+}
+
+.notActivated {
+  color: #FFBF00;
+}
+
+/* Dark mode Inputs */
+.App.dark .smallInput {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+/* Dark mode Dropdowns */
+.App.dark .engineDropdown,
+.App.dark .modelDropdown {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fff;
 }
