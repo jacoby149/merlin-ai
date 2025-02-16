@@ -1,7 +1,18 @@
 # Merlin AI
 
-Explain Merlin AI here
----
+Merlin AI is a template repository that you can copy to make full stack apps with out coding!
+
+<img src="./ai-ui/public/Merlin.jpg" alt="Merlin" style="zoom:25%;" />
+
+<center>Hi! I'm Merlin, I am a sick fullstack developer!!!</center>
+
+Merlin will code your frontend for you.
+
+Merlin will code your backend for you.
+
+You can fire your software developers!
+
+
 
 ## Getting Started
 
@@ -48,4 +59,4 @@ Explain Merlin AI here
    chmod +x start.command in Terminal.)
   
 4. Access Your App:
-  Once the build is complete, open your web browser and visit: http://localhost:3001
+    Once the build is complete, open your web browser and visit: http://localhost:3001
