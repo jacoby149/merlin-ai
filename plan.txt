@@ -1,4 +1,17 @@
 
+Check the UI logs and API logs after changes,
+if library missing, do the install before leaving the .mod endpoint.
+make it look like a chat.
+
+Making Changes ...
+  All Libraries look good
+  OR
+  Pandas missing, installing Pandas
+Envs Changed? Restart Containers.
+Error? Concise ai explanation. or No Errors! Looks good!
+Reply
+
+
 Product Flow (Approx 2 HRs?)
   Fontawesome?
   Add Get License Button
