@@ -1,38 +1,56 @@
 MINIMUM FOR RELEASE
 
-See if the web10.app gumroad problem persists.
-If it does, copy the product stuff, Make a new gumroad account using the merlinai email.
-Finish the gumroad products + publish them.
-
+Approx - 1HR
 Improve the CSS so I can extend in the future...
 Consolidate the chats to use the same component.
 Dark/Light Mode (GOOD LOOKING)
+Make it look good on smaller screens.
 
-Product Flow
+Product Flow (Approx 2 HRs?)
+  Fontawesome?
   Add Get License Button
   Buy my own License for testing. (Personal)
-
   Link to Discord
   Link to OpenAI API Key Page
+  Link to GitHub Repo
+  Instead of TwoChats OneChat, have a buy now button!
+  hyperlink to open the frontend, and backend
   Add license key verification[Gumroad]
   Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
   Add OpenAPI key storing [to env or cookies]
-  Add Comprehensive Readme With GIFs/Vids
   Make UI that takes the GPT API Key and writes it to the .env
+  make the ai dropdown actually pass it to the api
 
-
+Approx 3 Hrs?
 Add licensing files [MNazar]
 After Legal licenses are added, squash the code into one commit.
 File for a trademark
+Add Comprehensive Readme With GIFs/Vids
 
-V1.0.0!!!! --------------------------------
+V0.2.0!!!! --------------------------------
 
-Updating CSS?
-Install libraries on itself and restart???
-Selenium???
-Run it, with a play pause button? 
-where it autopilots until stopped.
-Writing Multiple files???
+Add git container for managing versions. NO pull or push even required hehe.
+Commit ONLY
+Add save changes + revert!
+Add an app auto coder for react native!
+
+Add a more robust software dev like flow.
+
+-1. Mission Bar - Identify the mission. Fullstack, frontend, or backend.
+    Hit Go, and it will just autopilot!
+0. Make a new GH branch.
+1. Attention -> Identify files to change in the first place, the paths.
+
+2. Make changes -> Change the files 
+3. Debug -> Debug the files [old tests + errors]
+
+4. Refactor -> Refactor the files for good small files ~100 most
+5. Debug -> Debug the files [old tests + errors]
+
+6. Test -> Write tests for the files
+7. Debug [tests + errors]
+
+8. Report done with the mission.
 
 V2.0.0!!!! --------------------------------
 

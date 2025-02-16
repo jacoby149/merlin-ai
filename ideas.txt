@@ -3,3 +3,26 @@ Really easy to manage gumroad license + trials!
 3 day trial with cookies is a piece of cake! With also trial ended cookie!
 GPT key would be easy to manage with cookies too!
 It is all localhost anyways. better design choice :)
+
+Add git container for managing versions. NO pull or push even required hehe.
+Commit ONLY
+Add save changes + revert!
+Add an app auto coder for react native!
+
+Add a more robust software dev like flow.
+
+0. Make a new GH branch.
+1. Attention -> Identify files to change in the first place, the paths.
+
+2. Make changes -> Change the files 
+3. Debug -> Debug the files [old tests + errors]
+
+4. Refactor -> Refactor the files for good small files ~100 most
+5. Debug -> Debug the files [old tests + errors]
+
+6. Test -> Write tests for the files
+7. Debug [tests + errors]
+
+8. Report done with the mission.
+
+
