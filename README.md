@@ -22,9 +22,15 @@ https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=ef068b42-7c7f-4d
 
 
 
-## Getting Started Video
+## Getting Started Video (Non Devs)
 
-https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=ef068b42-7c7f-4d69-b293-bd97d52b4ae6
+NEED TO MAKE
+
+
+
+## Getting Started Video (Devs)
+
+NEED TO MAKE
 
 
 
