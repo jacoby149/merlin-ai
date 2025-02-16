@@ -13,7 +13,7 @@
 ### Prerequisites
 
 - **Docker Desktop:**  
-  [Download and install Docker Desktop](https://www.docker.com/products/docker-desktop).
+  [Download and install Docker Desktop](https://www.docker.com/products/docker-desktop) and make sure it's running.
 
 - **Repository Cloning Options:**
   - **Preferred:** Use GitHub Desktop or the command-line Git tool.
@@ -38,7 +38,9 @@
    - **If Using the ZIP File:**  
      Extract the ZIP file to your desired directory.
 
-3. **Run the Application:**  
-   Navigate into your repository directory (whether cloned or extracted) and run:
+3. **Run the Application:**
+
+   #### For CLI Users:
+   Open your terminal, navigate into your repository directory, and run:
    ```bash
    docker compose up --build
