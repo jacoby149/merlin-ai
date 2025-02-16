@@ -161,3 +161,95 @@
   border: 1px solid #555;
   color: #fff;
 }
+
+/* Floating Purchase License Button */
+.purchaseLicenseButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #8a2be2, #ff4500);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.7), 0 0 20px rgba(138, 43, 226, 0.7);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 1000;
+}
+
+.purchaseLicenseButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 25px rgba(138, 43, 226, 0.8);
+}
+
+/* Bottom Icons Container */
+.bottomIconsContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 15px;
+  font-size: 1.5rem;
+  color: #fff;
+  z-index: 1000;
+}
+
+.bottomIconsContainer a {
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.bottomIconsContainer a:hover {
+  transform: scale(1.1);
+  color: #ffdd57;
+}
+.App.light .bottomIconsContainer {
+  color: #000; /* Sets the icons to black in light mode */
+}
+
+.App.light .bottomIconsContainer a:hover {
+  color: #ff5722; /* Or any hover color you prefer */
+}
+
+/* Adjust containers so help text appears underneath */
+.licenseContainer,
+.tokenContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Row for input, button, and status text */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.helpText {
+  font-size: 0.75rem;
+  color: #007BFF; /* Default link color */
+  margin-top: 5px; /* Adds 5px extra margin between the input row and help text */
+}
+
+.helpText a {
+  text-decoration: underline;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.helpText a:hover {
+  color: #0056b3;
+}
+
+/* Right-align help text for the OpenAI token */
+.helpTextRight {
+  width: 100%;
+  text-align: right;
+}

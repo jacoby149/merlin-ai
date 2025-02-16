@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import TwoChats from './TwoChats';
-import OneChat from './OneChat';
 import './App.css';
+import { FaDiscord, FaGithub, FaEnvelope, FaComments } from 'react-icons/fa';
 
 function App() {
   const [UIMode, setUIMode] = useState('Web');
@@ -12,7 +11,7 @@ function App() {
   const [tokenValid, setTokenValid] = useState(false);
   const [selectedModel, setSelectedModel] = useState('4o-mini');
   const [selectedEngine, setSelectedEngine] = useState('ChatGPT');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     // Check for saved theme preference in local storage
@@ -105,44 +104,90 @@ function App() {
 
       {/* Configuration Section: License (left) & ChatGPT Token (right) */}
       <div className="configContainer">
-        {/* License Section */}
-        <div className="licenseContainer">
-          <input
-            type="password"
-            placeholder="License key"
-            value={licenseKey}
-            onChange={(e) => setLicenseKey(e.target.value)}
-            onKeyDown={handleLicenseKeyDown}
-            className="smallInput"
-          />
-          <button className="smallButton" onClick={handleLicenseSubmit}>
-            Submit
-          </button>
-          <div className={`statusText ${licenseActivated ? 'activated' : 'notActivated'}`}>
-            {licenseActivated ? 'License Activated' : 'License Not Activated'}
-          </div>
-        </div>
 
-        {/* ChatGPT Token Section */}
-        <div className="tokenContainer">
-          <input
-            type="password"
-            placeholder="OpenAI token"
-            value={chatgptToken}
-            onChange={(e) => setChatgptToken(e.target.value)}
-            onKeyDown={handleTokenKeyDown}
-            className="smallInput"
-          />
-          <button className="smallButton" onClick={handleTokenSubmit}>
-            Submit
-          </button>
-          <div className={`statusText textRight ${tokenValid ? 'activated' : 'notActivated'}`}>
-            {tokenValid ? 'Valid OpenAI Token' : 'Invalid OpenAI Token'}
-          </div>
-        </div>
+
+{/* License Section */}
+<div className="licenseContainer">
+  <div className="inputRow">
+    <input
+      type="password"
+      placeholder="License key"
+      value={licenseKey}
+      onChange={(e) => setLicenseKey(e.target.value)}
+      onKeyDown={handleLicenseKeyDown}
+      className="smallInput"
+    />
+    <button className="smallButton" onClick={handleLicenseSubmit}>
+      Submit
+    </button>
+    <div className={`statusText ${licenseActivated ? 'activated' : 'notActivated'}`}>
+      {licenseActivated ? 'License Activated' : 'License Not Activated'}
+    </div>
+  </div>
+  <div className="helpText">
+    Need a license key?{' '}
+    <a
+      href="https://example.com/license-info"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Click here
+    </a>
+  </div>
+</div>
+
+
+{/* ChatGPT Token Section */}
+<div className="tokenContainer">
+  <div className="inputRow">
+    <input
+      type="password"
+      placeholder="OpenAI token"
+      value={chatgptToken}
+      onChange={(e) => setChatgptToken(e.target.value)}
+      onKeyDown={handleTokenKeyDown}
+      className="smallInput"
+    />
+    <button className="smallButton" onClick={handleTokenSubmit}>
+      Submit
+    </button>
+    <div className={`statusText ${tokenValid ? 'activated' : 'notActivated'}`}>
+      {tokenValid ? 'Valid OpenAI Token' : 'Invalid OpenAI Token'}
+    </div>
+  </div>
+  <div className="helpText helpTextRight">
+    Need an OpenAI token?{' '}
+    <a
+      href="https://example.com/token-info"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Click here
+    </a>
+  </div>
+</div>
       </div>
 
       <main className="content">{renderView()}</main>
+
+      {/* Floating Purchase License Button */}
+      <button className="purchaseLicenseButton">Purchase License</button>
+
+      {/* Bottom Icons Container */}
+      <div className="bottomIconsContainer">
+        <a href="https://discord.gg/yourserver" target="_blank" rel="noopener noreferrer" title="Join us on Discord">
+          <FaDiscord />
+        </a>
+        <a href="https://github.com/yourrepo" target="_blank" rel="noopener noreferrer" title="Star us on GitHub">
+          <FaGithub />
+        </a>
+        <a href="mailto:support@example.com" title="Email Support">
+          <FaEnvelope />
+        </a>
+        <a href="https://merlinai.com/support" target="_blank" rel="noopener noreferrer" title="Get Started">
+          <FaComments />
+        </a>
+      </div>
     </div>
   );
 }
