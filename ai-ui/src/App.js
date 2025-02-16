@@ -127,7 +127,7 @@ function App() {
   <div className="helpText">
     Need a license key?{' '}
     <a
-      href="https://merlinlicenses.gumroad.com/"
+      href="https://licenses.merlinai.cloud"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -170,7 +170,7 @@ function App() {
       <main className="content">{renderView()}</main>
 
       {/* Floating Purchase License Button */}
-      <a  href="https://merlinlicenses.gumroad.com" target="_blank" rel="noopener noreferrer">
+      <a  href="https://licenses.merlinai.cloud" target="_blank" rel="noopener noreferrer">
       <button className="purchaseLicenseButton">Purchase License</button>
       </a>
       {/* Bottom Icons Container */}
