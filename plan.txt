@@ -1,3 +1,19 @@
+Add A Readme
+
+Product Flow (Approx 2 HRs?)
+  Add license key verification[Gumroad]
+  Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
+  Add OpenAPI key storing [to env or cookies]
+  Make UI that takes the GPT API Key and writes it to the .env
+  make the ai dropdown actually pass it to the api
+
+Approx 3 Hrs?
+Add licensing files [MNazar]
+After Legal licenses are added, squash the code into one commit.
+File for a trademark
+
+
+
 Check the UI logs and API logs after changes,
 if library missing, do the install before leaving the .mod endpoint.
 make it look like a chat.
@@ -14,23 +30,11 @@ Making Changes ...
 4. Reply
 
 
-Product Flow (Approx 2 HRs?)
-  Add license key verification[Gumroad]
-  Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
-  Add OpenAPI key storing [to env or cookies]
-  Make UI that takes the GPT API Key and writes it to the .env
-  make the ai dropdown actually pass it to the api
-
-Approx 3 Hrs?
-Add licensing files [MNazar]
-After Legal licenses are added, squash the code into one commit.
-Add A Readme
 
 RELEASE V1.0.0!
 
 V0.2.0!!!! --------------------------------
 
-File for a trademark
 Add git container for managing versions. NO pull or push even required hehe.
 Commit ONLY
 Add save changes + revert!
@@ -55,6 +59,9 @@ Add a more robust software dev like flow.
 8. Report done with the mission.
 
 V2.0.0!!!! --------------------------------
+
+https://dashboard.render.com/web/new
+deploy render automatically
 
 Hosting for dummies?
 AWS?
