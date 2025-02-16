@@ -1,4 +1,3 @@
-
 Check the UI logs and API logs after changes,
 if library missing, do the install before leaving the .mod endpoint.
 make it look like a chat.
@@ -16,14 +15,6 @@ Making Changes ...
 
 
 Product Flow (Approx 2 HRs?)
-  Fontawesome?
-  Add Get License Button https://merlinlicenses.gumroad.com/
-  Buy my own License for testing. (Personal)
-  Link to Discord
-  Link to OpenAI API Key Page
-  Link to GitHub Repo
-  Instead of TwoChats OneChat, have a buy now button!
-  hyperlink to open the frontend, and backend
   Add license key verification[Gumroad]
   Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
   Add OpenAPI key storing [to env or cookies]
