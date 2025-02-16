@@ -4,12 +4,15 @@ if library missing, do the install before leaving the .mod endpoint.
 make it look like a chat.
 
 Making Changes ...
-  All Libraries look good
-  OR
-  Pandas missing, installing Pandas
-Envs Changed? Restart Containers.
-Error? Concise ai explanation. or No Errors! Looks good!
-Reply
+  1. All Libraries look good
+     OR
+     Pandas missing, installing Pandas
+  2. Envs Changed? 
+    Restart Containers.
+  3. Error? 
+     Concise ai explanation. 
+     or No Errors! Looks good!
+4. Reply
 
 
 Product Flow (Approx 2 HRs?)
