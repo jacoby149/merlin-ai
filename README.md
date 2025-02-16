@@ -2,23 +2,29 @@
 
 Merlin AI is a template repository that you can copy to make full stack apps with out coding!
 
-<img src="./ai-ui/public/Merlin.jpg" alt="Merlin" style="zoom:25%;" />
+
+
+<img src="./ai-ui/public/Merlin.jpg" alt="Merlin" style="width:128px;" />
 
 <center>Hi! I'm Merlin, I am a sick fullstack developer!!!</center>
 
-Merlin will code your frontend for you.
+<u>What Merlin Will Do : </u>
 
-Merlin will code your backend for you.
+* Merlin will code your frontend for you. Just chat with Merlin
 
-You can fire your software developers!
+* Merlin will code your backend for you. Just chat with Merlin
 
+  
 
-
-## How Does It Work?
+## Merlin AI Demo
 
 ### ![gumroad](./ai-ui/public/gumroad.png)
 
 <center>Chat with Merlin, and see your app update in real time!</center>
+
+
+
+Video Demonstration - https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=ef068b42-7c7f-4d69-b293-bd97d52b4ae6
 
 
 
