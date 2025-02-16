@@ -20,8 +20,10 @@ Explain Merlin AI here
 
 1. **Create or Download Your Repository:**  
    - **Self-Clone with Template:**  
-     Click the button above to automatically create a new repository based on the template.
-   - **Download ZIP (URL Hack):**  
+     Click the button above to automatically create a new repository based on the template. Then go to your 
+     repository and clone that repo locally!
+     
+   - **Download ZIP (The Easy Way For Non Software Developers)**  
      If you don’t have Git installed, download the repository as a ZIP file using this URL:  
      [Download ZIP](https://github.com/jacoby149/merlin-ai/archive/refs/heads/main.zip)  
      *Note: Adjust the branch name if needed.*
