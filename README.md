@@ -5,7 +5,7 @@ https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=4ae40b2e-f0cb-42
 
 ## What Merlin AI Does
 
-Merlin AI is a template repository that you can copy to make full stack apps with out coding!
+Merlin AI makes full stack apps for you with out you coding! You just have to chat with Merlin!
 
 
 
