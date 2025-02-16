@@ -28,16 +28,7 @@ Explain Merlin AI here
      [Download ZIP](https://github.com/jacoby149/merlin-ai/archive/refs/heads/main.zip)  
      *Note: Adjust the branch name if needed.*
 
-2. **Set Up Your Local Environment:**  
-   - **If Cloning:**  
-     Clone your repository using:
-     ```bash
-     git clone https://github.com/<your-username>/<your-repo>.git
-     ```
-   - **If Using the ZIP File:**  
-     Extract the ZIP file to your desired directory.
-
-3. **Run the Application:**
+2. **Run the Application:**
 
    #### For CLI Users:
    Open your terminal, navigate into your repository directory, and run:
@@ -52,9 +43,9 @@ Explain Merlin AI here
    Double-click the start.bat file included in the repository. This batch file will open a terminal and run the 
    command automatically.
   
-  macOS/Linux Users:
-  Double-click the start.command file included in the repository. (If needed, mark it as executable by running 
-  chmod +x start.command in Terminal.)
+   macOS/Linux Users:
+   Double-click the start.command file included in the repository. (If needed, mark it as executable by running 
+   chmod +x start.command in Terminal.)
   
 4. Access Your App:
   Once the build is complete, open your web browser and visit: http://localhost:3001
