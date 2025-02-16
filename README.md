@@ -16,7 +16,7 @@ Explain Merlin AI here
 
 ### Steps
 
-[![Copy the template click me!]](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
+[Copy the template by clicking this link](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
 
 1. **Create or Download Your Repository:**  
    - **Self-Clone with Template:**  
