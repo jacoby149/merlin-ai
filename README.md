@@ -14,6 +14,14 @@ You can fire your software developers!
 
 
 
+## How Does It Work?
+
+### ![gumroad](./ai-ui/public/gumroad.png)
+
+<center>Chat with Merlin, and see your app update in real time!</center>
+
+
+
 ## Getting Started
 
 ### Prerequisites
