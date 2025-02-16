@@ -121,7 +121,6 @@ function TwoChats() {
         gap: '1rem',
         maxWidth: '1200px',
         margin: '2rem auto',
-        padding: '0 1rem'
       }}
     >
       <ChatBox apiEndpoint="/auto_coder/ui_mod" title="Front End Auto Coder" message="Type what you would like the agent to do on the frontend." />

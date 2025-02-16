@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import ChatAppDemo from './ChatAppDemo';
 import TwoChats from './TwoChats';
 import OneChat from './OneChat';
 
 function App() {
-  const [view, setView] = useState('TwoChats');
+  const [UIMode, setUIMode] = useState('Web');
   const [licenseKey, setLicenseKey] = useState('');
   const [licenseActivated, setLicenseActivated] = useState(false);
   const [chatgptToken, setChatgptToken] = useState('');
@@ -30,14 +29,7 @@ function App() {
   }, [isDarkMode]);
 
   const renderView = () => {
-    switch (view) {
-      case 'TwoChats':
-        return <TwoChats />;
-      case 'OneChat':
-        return <OneChat />;
-      default:
-        return null;
-    }
+    return <TwoChats />;
   };
 
   const handleLicenseSubmit = () => {
@@ -76,8 +68,8 @@ function App() {
         <div style={styles.leftSection}>
           <div style={styles.brand}><img src="/Merlin-no-back-small.png" style={{ height: "20px", width: "auto", marginRight: "5px", marginLeft: "-5px" }} /> Merlin AI </div>
           <nav style={styles.nav}>
-            <button style={styles.button} onClick={() => setView('TwoChats')}>TwoChats</button>
-            <button style={styles.button} onClick={() => setView('OneChat')}>OneChat</button>
+            <button style={styles.button} onClick={() => setUIMode('Web')}>Web</button>
+            <button style={styles.button} onClick={() => setUIMode('Mobile')} disabled={true} >Mobile</button>
           </nav>
         </div>
         <div style={styles.dropdownContainer}>
@@ -230,7 +222,7 @@ const styles = {
     fontSize: '0.8rem',
     borderRadius: '4px',
     border: '1px solid #ccc',
-    width: '150px',
+    width: '120px',
   },
   smallButton: {
     padding: '4px 6px',
