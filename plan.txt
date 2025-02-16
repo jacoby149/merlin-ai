@@ -1,7 +1,6 @@
 MINIMUM FOR RELEASE
 
 Approx - 1HR
-Dark/Light Mode (GOOD LOOKING)
 
 Product Flow (Approx 2 HRs?)
   Fontawesome?
