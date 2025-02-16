@@ -1,3 +1,4 @@
+Homepage marketing!!!
 Product Flow (Approx 2 HRs?)
   Add license key verification[Gumroad]
   Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]

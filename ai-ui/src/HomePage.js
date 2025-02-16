@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ChatBox from './ChatBox'; // Ensure ChatBox is exported from its own file.
 import { FaDiscord, FaGithub, FaEnvelope } from 'react-icons/fa';
 import './HomePage.css'; // Homepage-specific styles
+import Vanilla from './Vanilla'
 
 function HomePage() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -70,13 +71,14 @@ function HomePage() {
         <div className="leftPane">
           <ChatBox 
             apiEndpoint="/auto_coder/ui_mod"
-            title="Demo ChatBox"
-            message="Try out our chat functionality!"
+title="Merlin AI Coder" 
+        message="Type what you would like the agent to code." 
           />
         </div>
 
         {/* Right Pane: Embedded Vanilla React App */}
         <div className="rightPane">
+          {/* <Vanilla/> */}
           <iframe
             src="http://localhost:3000"
             title="Vanilla React App Demo"
