@@ -127,7 +127,7 @@ function App() {
   <div className="helpText">
     Need a license key?{' '}
     <a
-      href="https://example.com/license-info"
+      href="https://merlinlicenses.gumroad.com/"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -158,7 +158,7 @@ function App() {
   <div className="helpText helpTextRight">
     Need an OpenAI token?{' '}
     <a
-      href="https://example.com/token-info"
+      href="https://platform.openai.com/api-keys"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -167,26 +167,26 @@ function App() {
   </div>
 </div>
       </div>
-
       <main className="content">{renderView()}</main>
 
       {/* Floating Purchase License Button */}
+      <a  href="https://merlinlicenses.gumroad.com" target="_blank" rel="noopener noreferrer">
       <button className="purchaseLicenseButton">Purchase License</button>
-
+      </a>
       {/* Bottom Icons Container */}
       <div className="bottomIconsContainer">
-        <a href="https://discord.gg/yourserver" target="_blank" rel="noopener noreferrer" title="Join us on Discord">
+        <a href="https://discord.gg/upggguqpx7" target="_blank" rel="noopener noreferrer" title="Join us on Discord">
           <FaDiscord />
         </a>
-        <a href="https://github.com/yourrepo" target="_blank" rel="noopener noreferrer" title="Star us on GitHub">
+        <a href="https://github.com/jacoby149/merlin-ai" target="_blank" rel="noopener noreferrer" title="Star us on GitHub">
           <FaGithub />
         </a>
-        <a href="mailto:support@example.com" title="Email Support">
+        <a href="mailto:support@merlinai.cloud" title="Email Support">
           <FaEnvelope />
         </a>
-        <a href="https://merlinai.com/support" target="_blank" rel="noopener noreferrer" title="Get Started">
-          <FaComments />
-        </a>
+        {/* <a href="https://merlinai.com/support" target="_blank" rel="noopener noreferrer" title="Get Started"> */}
+        {/*   <FaComments /> */}
+        {/* </a> */}
       </div>
     </div>
   );
