@@ -1,6 +1,3 @@
-MINIMUM FOR RELEASE
-
-Approx - 1HR
 
 Product Flow (Approx 2 HRs?)
   Fontawesome?
@@ -20,11 +17,13 @@ Product Flow (Approx 2 HRs?)
 Approx 3 Hrs?
 Add licensing files [MNazar]
 After Legal licenses are added, squash the code into one commit.
-File for a trademark
-Add Comprehensive Readme With GIFs/Vids
+Add A Readme
+
+RELEASE V1.0.0!
 
 V0.2.0!!!! --------------------------------
 
+File for a trademark
 Add git container for managing versions. NO pull or push even required hehe.
 Commit ONLY
 Add save changes + revert!
