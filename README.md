@@ -44,3 +44,18 @@
    Open your terminal, navigate into your repository directory, and run:
    ```bash
    docker compose up --build
+   ```
+   
+   #### For Non-CLI Users:
+   We've included executable scripts for a more user-friendly experience:
+
+   Windows Users:
+   Double-click the start.bat file included in the repository. This batch file will open a terminal and run the 
+   command automatically.
+  
+  macOS/Linux Users:
+  Double-click the start.command file included in the repository. (If needed, mark it as executable by running 
+  chmod +x start.command in Terminal.)
+  
+4. Access Your App:
+  Once the build is complete, open your web browser and visit: http://localhost:3001
