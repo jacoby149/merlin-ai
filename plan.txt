@@ -1,5 +1,3 @@
-Add A Readme
-
 Product Flow (Approx 2 HRs?)
   Add license key verification[Gumroad]
   Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
@@ -7,12 +5,18 @@ Product Flow (Approx 2 HRs?)
   Make UI that takes the GPT API Key and writes it to the .env
   make the ai dropdown actually pass it to the api
 
+Add getting started videos
+  Developers (Windows) (Mac)
+  Non Developers (Windows) (Mac)
+
 Approx 3 Hrs?
 Add licensing files [MNazar]
 After Legal licenses are added, squash the code into one commit.
 File for a trademark
 
+RELEASE V1.0.0!
 
+V0.2.0!!!! --------------------------------
 
 Check the UI logs and API logs after changes,
 if library missing, do the install before leaving the .mod endpoint.
@@ -28,12 +32,6 @@ Making Changes ...
      Concise ai explanation. 
      or No Errors! Looks good!
 4. Reply
-
-
-
-RELEASE V1.0.0!
-
-V0.2.0!!!! --------------------------------
 
 Add git container for managing versions. NO pull or push even required hehe.
 Commit ONLY
