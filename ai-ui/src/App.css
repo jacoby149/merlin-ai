@@ -1,5 +1,9 @@
 
 /* Dark and Light Mode Styles */
+.App{
+  height:100vh;
+}
+
 .App.dark {
   background-color: #121212;
   color: #ffffff;
