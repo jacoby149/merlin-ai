@@ -1,11 +1,6 @@
 # Merlin AI
 
-<!-- Styled Button for Template Repo -->
-[![Make your own fullstack app with AI!](https://img.shields.io/badge/Make%20your%20own-fullstack%20app%20with%20AI!-brightgreen)](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
-
-> **Get Started in Minutes:** Click the button above to create your own repository from the Merlin AI template.  
-> If you don't have Git installed, you can also download a ZIP of the repository directly.
-
+Explain Merlin AI here
 ---
 
 ## Getting Started
@@ -20,6 +15,8 @@
   - **Alternative:** Directly download the repository as a ZIP file.
 
 ### Steps
+
+[![Copy the template click me!](https://img.shields.io/badge/Make%20your%20own-fullstack%20app%20with%20AI!-brightgreen)](https://github.com/new?template_name=merlin-ai&template_owner=jacoby149)
 
 1. **Create or Download Your Repository:**  
    - **Self-Clone with Template:**  
