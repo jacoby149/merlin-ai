@@ -1,8 +1,6 @@
 # Merlin AI Demo
 
-[Building a Shopping App](https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=4ae40b2e-f0cb-4236-828e-de50908099f4)
-
-
+https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=4ae40b2e-f0cb-4236-828e-de50908099f4
 
 
 ## What Merlin AI Does
