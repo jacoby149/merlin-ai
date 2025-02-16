@@ -18,13 +18,7 @@ Merlin AI is a template repository that you can copy to make full stack apps wit
 
 ## Merlin AI Demo
 
-### ![gumroad](./ai-ui/public/gumroad.png)
-
-<center>Chat with Merlin, and see your app update in real time!</center>
-
-
-
-Video Demonstration - https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=ef068b42-7c7f-4d69-b293-bd97d52b4ae6
+https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=ef068b42-7c7f-4d69-b293-bd97d52b4ae6
 
 
 
