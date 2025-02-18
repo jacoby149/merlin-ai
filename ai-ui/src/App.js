@@ -22,7 +22,27 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Save the theme preference in local storage
+    // Save the th<div style={{
+    //       position: 'fixed', // Make it fixed on the screen
+    //             top: '50%', // Center vertically
+    //                   left: '91%', // Center horizontally
+    //                         transform: 'translate(-50%, -50%)', // Adjust for exact centering
+    //                               zIndex: 1000, // Make sure it's on top of other elements
+    //                                     width: '320px', // Set the width
+    //                                           height: '180px', // Set the height
+    //                                               }}>
+    //                                                     <iframe
+    //                                                             width="320"
+    //                                                                     height="180"
+    //                                                                             src="https://www.loom.com/embed/e0050bcf46f945bf9a571cdbf495886b?sid=ab0885ce-8c12-4258-a4f9-52eb8eba8bc5"
+    //                                                                                     frameBorder="0"
+    //                                                                                             allowFullScreen
+    //                                                                                                     style={{
+    //                                                                                                               width: '100%',
+    //                                                                                                                         height: '100%',
+    //                                                                                                                                 }}
+    //                                                                                                                                       />
+    //                                                                                                                                           </div> eme preference in local storage
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
@@ -172,7 +192,9 @@ function App() {
   </div>
 </div>
       </div>
-            <h1><center>Coming Out in Four Weeks</center></h1>
+            <h1><center>Coming Out in Four Weeks. <a style={{color:"orange"}}href="https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=79e17692-f3f5-4829-95a0-631fe611024a" target="_blank" rel="noopener noreferrer">
+  Watch Video
+</a></center></h1>
       <center>
    </center>
       <main className={`content ${isDarkMode ? 'dark' : 'light'}`}>{renderView()}</main>
