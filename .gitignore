@@ -4,3 +4,4 @@
 .api-env
 **.DS_Store
 ai-ui/node_modules
+ai-ui/build
