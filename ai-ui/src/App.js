@@ -174,27 +174,7 @@ function App() {
       </div>
             <h1><center>Coming Out in Four Weeks</center></h1>
       <center>
-<div style={{
-      position: 'fixed', // Make it fixed on the screen
-      top: '50%', // Center vertically
-      left: '50%', // Center horizontally
-      transform: 'translate(-50%, -50%)', // Adjust for exact centering
-      zIndex: 1000, // Make sure it's on top of other elements
-      width: '640px', // Set the width
-      height: '360px', // Set the height
-    }}>
-      <iframe
-        width="640"
-        height="360"
-        src="https://www.loom.com/embed/e0050bcf46f945bf9a571cdbf495886b?sid=ab0885ce-8c12-4258-a4f9-52eb8eba8bc5"
-        frameBorder="0"
-        allowFullScreen
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
-      />
-    </div>    </center>
+   </center>
       <main className={`content ${isDarkMode ? 'dark' : 'light'}`}>{renderView()}</main>
       {/* Floating Purchase License Button */}
       <a  href="https://licenses.merlinai.cloud" target="_blank" rel="noopener noreferrer">
