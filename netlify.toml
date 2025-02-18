@@ -3,3 +3,5 @@
   command = "npm run build"  # Command to build the React app (or `yarn build` if you're using yarn)
   publish = "ai-ui/build"  # The folder where the built files are outputted after running the build command
 
+[build.environment]
+  CI = "false"  # Disable CI for this build
