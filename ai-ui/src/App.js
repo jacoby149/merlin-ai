@@ -172,7 +172,7 @@ function App() {
   </div>
 </div>
       </div>
-      <main className="content">{renderView()}</main>
+      <main className={`content ${isDarkMode ? 'dark' : 'light'}`}>{renderView()}</main>
 
       {/* Floating Purchase License Button */}
       <a  href="https://licenses.merlinai.cloud" target="_blank" rel="noopener noreferrer">

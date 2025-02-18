@@ -21,19 +21,6 @@ Merlin AI makes full stack apps for you with out you coding! You just have to ch
 
   
 
-
-## Getting Started Video (Non Devs)
-
-NEED TO MAKE
-
-
-
-## Getting Started Video (Devs)
-
-NEED TO MAKE
-
-
-
 ## Getting Started
 
 

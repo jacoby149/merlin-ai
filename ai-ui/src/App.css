@@ -7,6 +7,7 @@
 .App.dark {
   background-color: #121212;
   color: #ffffff;
+  height:100vh;
 }
 
 .App.light {
@@ -79,6 +80,10 @@
 /* Content Area */
 .content {
   padding: 20px;
+}
+.content.dark {
+  padding: 20px;
+  background-color:#121212;
 }
 
 /* Configuration Container */
