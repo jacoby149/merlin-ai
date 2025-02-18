@@ -258,3 +258,15 @@
   width: 100%;
   text-align: right;
 }
+@media (max-width: 600px) {
+  .nav,
+  .dropdownContainer {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .licenseContainer,
+  .tokenContainer {
+    display: none;
+  }
+}
