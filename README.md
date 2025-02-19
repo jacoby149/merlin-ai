@@ -5,6 +5,9 @@ https://www.loom.com/share/e0050bcf46f945bf9a571cdbf495886b?sid=4ae40b2e-f0cb-42
 
 ## What Merlin AI Does
 
+* HomePage - https://merlinai.netlify.app/
+* License Page - https://licenses.merlinai.cloud/
+
 Merlin AI makes full stack apps for you with out you coding! You just have to chat with Merlin!
 
 
