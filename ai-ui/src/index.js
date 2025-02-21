@@ -10,12 +10,7 @@ import config from "./config";
 const UIMode = "Home"
 
   const renderView = () => {
-    switch (config.homePageEnabled) {
-    case true:
-    return <HomePage/>;
-    default:
       return <App/>;
-  }
 };
 
 
