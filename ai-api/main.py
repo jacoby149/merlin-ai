@@ -211,9 +211,9 @@ async def read_file(payload:ReadFilePayload):
       - path: the absolute path of the file in the container (e.g., '/app/main.py')
     """
     client = docker.from_env()
-    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service.value}"})
+    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
     if not containers:
-        raise HTTPException(status_code=404, detail=f"{payload.service.value} container not found")
+        raise HTTPException(status_code=404, detail=f"{payload.service} container not found")
     container = containers[0]
 
     try:
@@ -237,7 +237,7 @@ async def read_file(payload:ReadFilePayload):
                 raise HTTPException(status_code=500, detail="Error extracting file from archive")
             content = file_obj.read().decode("utf-8")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading file from {payload.service.value} container: {e}")
+        raise HTTPException(status_code=500, detail=f"Error reading file from {payload.service} container: {e}")
 
     return {"content": content}
 
@@ -257,9 +257,9 @@ async def write_file(payload: WriteFilePayload):
       - content: the new content for the file.
     """
     client = docker.from_env()
-    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service.value}"})
+    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
     if not containers:
-        raise HTTPException(status_code=404, detail=f"{payload.service.value} container not found")
+        raise HTTPException(status_code=404, detail=f"{payload.service} container not found")
     container = containers[0]
 
     # Split the given path into directory and file name.
@@ -282,7 +282,7 @@ async def write_file(payload: WriteFilePayload):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during file upload: {e}")
     await container_restart_api()
-    return {"message": f"File '{payload.path}' updated in {payload.service.value} container"}
+    return {"message": f"File '{payload.path}' updated in {payload.service} container"}
 
 MAIN_PY = "app/main.py"
 APP_JS = "app/src/App.js"
