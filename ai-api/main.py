@@ -1,7 +1,34 @@
 
 from fastapi import FastAPI
-
 from starlette.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import tarfile
+import io
+import os
+# Initialize the Docker client from the host's Docker socket.
+import docker
+from enum import Enum
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from openai import OpenAI
+import settings
+import re
+
+# settings
+import os as os_lib
+TARGET_API = 'api'
+TARGET_UI = 'ui'
+TARGET_API_SELF='ai-api-self'
+# goes through the above config variables 
+# checks if env vars of those names exist and sets them if they do
+vars = [v for v in globals()]
+for v in vars :
+    env_val = os_lib.getenv(v)
+    if env_val == None:
+        continue
+    else:
+        globals()[v] = env_val
 
 app = FastAPI(title="ChatGPT-like API with Router")
 
@@ -21,14 +48,6 @@ app.add_middleware(
 """
     COMMANDS
 """
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-import tarfile
-import io
-import os
-# Initialize the Docker client from the host's Docker socket.
-import docker
-from enum import Enum
 
 client = docker.from_env()
 
@@ -50,8 +69,8 @@ async def container_restart_ui():
             raise HTTPException(status_code=404, detail="UI container not found")
         container = containers[0]
         
-        # Restart the container.
         container.restart(timeout=10)
+        # Restart the container.
         
         return {"message": "UI container restarted"}
     except docker.errors.DockerException as e:
@@ -323,17 +342,11 @@ class NewMainContent(BaseModel):
 """
     AUTO CODER
 """
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from openai import OpenAI
-import settings
-import re
-
 
 
 
 # Create a router instance.
-router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
+auto_router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
 
 # Initialize the OpenAI client.
 client = OpenAI(api_key=settings.OPENAPI_KEY)
@@ -383,7 +396,7 @@ class ModRequest(BaseModel):
 class ModRespose(BaseModel):
     reply:str
 
-@router.post("/api_mod")
+@auto_router.post("/api_mod")
 async def api_mod(r:ModRequest):
     """
     Modifies the main.py file
@@ -432,7 +445,7 @@ def ask_ui(prompt: str):
     return code_block, reply_text
 
 
-@router.post("/ui_mod")
+@auto_router.post("/ui_mod")
 async def ui_mod(r:ModRequest):
     """
     Modifies the App.js file
@@ -453,7 +466,7 @@ async def ui_mod(r:ModRequest):
     await write_app_js(code)
     return {"reply":reply}
 
-@router.post("/fs_mod")
+@auto_router.post("/fs_mod")
 async def fs_mod(r:ModRequest):
     api_reply = (await api_mod(r))["reply"]
     ui_reply = (await ui_mod(r))["reply"]
