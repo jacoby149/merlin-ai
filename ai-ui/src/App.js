@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { FaDiscord, FaGithub, FaEnvelope, FaComments } from 'react-icons/fa';
 
-import React, { useState } from 'react';
-
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 
 function ChatBox({ apiEndpoint, title = "Chat with OpenAI", message = "No messages yet. Say hello!" }) {

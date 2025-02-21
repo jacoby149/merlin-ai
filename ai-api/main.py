@@ -197,7 +197,7 @@ class Service(str, Enum):
     api = "api"
 
 class ReadFilePayload(BaseModel):
-    service: Service
+    service: str
     path: str
 
 
@@ -242,7 +242,7 @@ async def read_file(payload:ReadFilePayload):
     return {"content": content}
 
 class WriteFilePayload(BaseModel):
-    service: Service
+    service: str
     path: str
     content: str
 
