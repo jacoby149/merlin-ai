@@ -1,14 +1,12 @@
 
 from fastapi import FastAPI
-from endpoints.chat.endpoints import router as chat_router
-from endpoints.commands.endpoints import router as commands_router
-from endpoints.auto_coder.endpoints import router as auto_router
 
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="ChatGPT-like API with Router")
 
 app.add_middleware(
+        
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
@@ -327,10 +325,12 @@ class NewMainContent(BaseModel):
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from endpoints.commands.endpoints import read_main_py,write_main_py,read_app_js,write_app_js
 from openai import OpenAI
 import settings
 import re
+
+
+
 
 # Create a router instance.
 router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
