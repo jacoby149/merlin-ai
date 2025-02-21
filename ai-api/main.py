@@ -31,6 +31,7 @@ for v in vars :
         globals()[v] = env_val
 
 app = FastAPI(title="ChatGPT-like API with Router")
+# Include the chat router.
 
 app.add_middleware(
         
@@ -64,7 +65,7 @@ async def container_restart_ui():
     """
     try:
         # Locate the UI container using its Docker Compose service label.
-        containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
         if not containers:
             raise HTTPException(status_code=404, detail="UI container not found")
         container = containers[0]
@@ -86,7 +87,7 @@ async def container_restart_api():
     """
     try:
         # Find the container by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
+        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
         if not containers:
             raise HTTPException(status_code=404, detail="API container not found")
         container = containers[0]
@@ -134,7 +135,7 @@ async def install_restart_ui(pkg: Package=Package(name="react-chartjs-2")):
     defined container_restart_ui() endpoint to restart the UI container.
     """
     # Locate the UI container using its Docker Compose service label.
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+    containers = client.containers.list(filters={"label":  f"com.docker.compose.service={TARGET_UI}"})
     if not containers:
         raise HTTPException(status_code=404, detail="UI container not found")
     container = containers[0]
@@ -159,7 +160,7 @@ async def scan_ui(num_lines: int = 10):
     """
     try:
         # Filter containers by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": "com.docker.compose.service=ui"})
+        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
         if not containers:
             raise HTTPException(status_code=404, detail="UI service container not found")
         
@@ -179,7 +180,7 @@ async def scan_api(num_lines: int = 10):
     """
     try:
         # Filter containers by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
+        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
         if not containers:
             raise HTTPException(status_code=404, detail="API service container not found")
         
@@ -294,7 +295,7 @@ async def write_main_py(content:str):
     The new main.py content is sent in the request payload. After updating the file, it calls the 
     container_restart_api() endpoint to restart the API container.
     """
-    return await write_file(WriteFilePayload(service=Service.api,path=MAIN_PY,content=content))
+    return await write_file(WriteFilePayload(service=TARGET_API,path=MAIN_PY,content=content))
 
 @cmd_router.post("/write_app_js")
 async def write_app_js(content: str):
@@ -303,7 +304,7 @@ async def write_app_js(content: str):
     The new src/App.js content is sent in the request payload. After updating the file, it calls the 
     container_restart_ui() endpoint to restart the UI container.
     """
-    return await write_file(WriteFilePayload(service=Service.ui,path=APP_JS,content=content))
+    return await write_file(WriteFilePayload(service=TARGET_UI,path=APP_JS,content=content))
 
 @cmd_router.post("/write_app_css")
 async def write_app_css(content:str):
@@ -311,7 +312,7 @@ async def write_app_css(content:str):
     Overwrites the src/App.css file inside the UI container's /app directory with the new content provided.
     After updating the file, it calls the container_restart_ui() endpoint to restart the UI container.
     """
-    return await write_file(WriteFilePayload(service=Service.ui,path=APP_CSS,content=content))
+    return await write_file(WriteFilePayload(service=TARGET_UI,path=APP_CSS,content=content))
 
 
 @cmd_router.get("/read_app_css")
@@ -319,14 +320,14 @@ async def read_app_css():
     """
     Reads the content of src/App.css from the UI container's /app directory and returns it.
     """
-    return await read_file(ReadFilePayload(service=Service.ui,path=APP_CSS))
+    return await read_file(ReadFilePayload(service=TARGET_UI,path=APP_CSS))
 
 @cmd_router.get("/read_app_js")
 async def read_app_js():
     """
     Reads the content of src/App.js from the UI container's /app directory and returns it.
     """
-    return await read_file(ReadFilePayload(service=Service.ui,path=APP_JS))
+    return await read_file(ReadFilePayload(service=TARGET_UI,path=APP_JS))
 
 
 @cmd_router.get("/read_main_py")
@@ -334,7 +335,7 @@ async def read_main_py():
     """
     Reads the content of main.py from the API container's /app directory and returns it.
     """
-    return await read_file(ReadFilePayload(service=Service.api,path=MAIN_PY))
+    return await read_file(ReadFilePayload(service=TARGET_API,path=MAIN_PY))
 
 class NewMainContent(BaseModel):
     content: str
@@ -471,3 +472,8 @@ async def fs_mod(r:ModRequest):
     api_reply = (await api_mod(r))["reply"]
     ui_reply = (await ui_mod(r))["reply"]
     return {"reply":f"API : {api_reply} \n UI : {ui_reply}"}
+
+app.include_router(cmd_router)
+app.include_router(auto_router)
+
+
