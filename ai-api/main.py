@@ -50,7 +50,7 @@ app.add_middleware(
     COMMANDS
 """
 
-client = docker.from_env()
+docker_client = docker.from_env()
 
 # Create a router instance.
 cmd_router = APIRouter(prefix="/commands", tags=["commands"])
@@ -65,7 +65,7 @@ async def container_restart_ui():
     """
     try:
         # Locate the UI container using its Docker Compose service label.
-        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
+        containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
         if not containers:
             raise HTTPException(status_code=404, detail="UI container not found")
         container = containers[0]
@@ -87,7 +87,7 @@ async def container_restart_api():
     """
     try:
         # Find the container by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
+        containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
         if not containers:
             raise HTTPException(status_code=404, detail="API container not found")
         container = containers[0]
@@ -110,7 +110,7 @@ async def install_restart_api(pkg: Package=Package(name="pandas")):
     container_restart_api() endpoint to restart the API container.
     """
     # Locate the API container using its Docker Compose service label.
-    containers = client.containers.list(filters={"label": "com.docker.compose.service=api"})
+    containers = docker_client.containers.list(filters={"label": "com.docker.compose.service=api"})
     if not containers:
         raise HTTPException(status_code=404, detail="API container not found")
     container = containers[0]
@@ -135,7 +135,7 @@ async def install_restart_ui(pkg: Package=Package(name="react-chartjs-2")):
     defined container_restart_ui() endpoint to restart the UI container.
     """
     # Locate the UI container using its Docker Compose service label.
-    containers = client.containers.list(filters={"label":  f"com.docker.compose.service={TARGET_UI}"})
+    containers = docker_client.containers.list(filters={"label":  f"com.docker.compose.service={TARGET_UI}"})
     if not containers:
         raise HTTPException(status_code=404, detail="UI container not found")
     container = containers[0]
@@ -160,7 +160,7 @@ async def scan_ui(num_lines: int = 10):
     """
     try:
         # Filter containers by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
+        containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_UI}"})
         if not containers:
             raise HTTPException(status_code=404, detail="UI service container not found")
         
@@ -180,7 +180,7 @@ async def scan_api(num_lines: int = 10):
     """
     try:
         # Filter containers by the Docker Compose service label.
-        containers = client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
+        containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={TARGET_API}"})
         if not containers:
             raise HTTPException(status_code=404, detail="API service container not found")
         
@@ -210,8 +210,8 @@ async def read_file(payload:ReadFilePayload):
       - service: the Docker Compose service name (e.g., 'api' or 'ui')
       - path: the absolute path of the file in the container (e.g., '/app/main.py')
     """
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
+    docker_client = docker.from_env()
+    containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
     if not containers:
         raise HTTPException(status_code=404, detail=f"{payload.service} container not found")
     container = containers[0]
@@ -256,8 +256,8 @@ async def write_file(payload: WriteFilePayload):
       - path: the absolute path of the file in the container (e.g., '/app/main.py')
       - content: the new content for the file.
     """
-    client = docker.from_env()
-    containers = client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
+    docker_client = docker.from_env()
+    containers = docker_client.containers.list(filters={"label": f"com.docker.compose.service={payload.service}"})
     if not containers:
         raise HTTPException(status_code=404, detail=f"{payload.service} container not found")
     container = containers[0]
@@ -350,9 +350,9 @@ class NewMainContent(BaseModel):
 auto_router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
 
 # Initialize the OpenAI client.
-client = OpenAI(api_key=settings.OPENAPI_KEY)
+ai_client = OpenAI(api_key=settings.OPENAPI_KEY)
 
-if not client.api_key:
+if not ai_client.api_key:
     raise Exception("Missing OpenAI API key. Please set the OPENAPI_API_KEY environment variable.")
 
 
@@ -367,7 +367,7 @@ def ask_api(prompt: str):
     conversation_history = [{"role": "user", "content": prompt}]
     
     try:
-        response = client.chat.completions.create(
+        response = ai_client.chat.completions.create(
             model="gpt-4o-mini",  # or any available model
             messages=conversation_history,
             temperature=0.5,      # adjust as needed
@@ -422,7 +422,7 @@ def ask_ui(prompt: str):
     conversation_history = [{"role": "user", "content": prompt}]
     
     try:
-        response = client.chat.completions.create(
+        response = ai_client.chat.completions.create(
             model="gpt-4o-mini",  # or any available model
             messages=conversation_history,
             temperature=0.5,      # adjust as needed
