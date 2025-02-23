@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 import tarfile
 import io
 import os
@@ -19,12 +20,17 @@ import os as os_lib
 TARGET_API = 'api'
 TARGET_UI = 'ui'
 TARGET_API_SELF='ai-api-self'
-AI_MODEL = 'deepseek/deepseek-r1'
-AI_API_BASE_URL="https://api.novita.ai/v3/openai"
+AI_MODEL = 'gpt-4o-mini'
+NOVITA_AI_API_BASE_URL="https://api.novita.ai/v3/openai"
+OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 
 OPENAPI_KEY=""
 DEEPSEEK_API_KEY=""
 NOVITA_API_KEY=""
+
+GIT_NAME=""
+GIT_EMAIL=""
+
 # goes through the above config variables 
 # checks if env vars of those names exist and sets them if they do
 vars = [v for v in globals()]
@@ -35,7 +41,8 @@ for v in vars :
     else:
         globals()[v] = env_val
 
-AI_API_KEY=NOVITA_API_KEY
+AI_API_KEY=OPENAPI_KEY
+AI_API_BASE_URL = OPENAI_API_BASE_URL
 
 app = FastAPI(title="ChatGPT-like API with Router")
 # Include the chat router.
@@ -436,6 +443,7 @@ def ask_ui(prompt: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"OpenAI API request failed: {e}")
 
+
     full_response = response.choices[0].message.content
 
     # Use a regex to find the text enclosed in our custom tokens.
@@ -479,30 +487,47 @@ async def fs_mod(r:ModRequest):
     ui_reply = (await ui_mod(r))["reply"]
     return {"reply":f"API : {api_reply} \n UI : {ui_reply}"}
 
+class GitCommitPayload(BaseModel):
+    message: str
+    author_name: Optional[str]=GIT_NAME
+    author_email: Optional[str]=GIT_EMAIL
+
 @cmd_router.post("/git_commit")
-async def git_commit(message: str):
+async def git_commit(payload: GitCommitPayload):
     """
-    Makes a git commit in the git-controller container with the provided commit message.
+    Makes a git commit in the git-controller container with the provided commit message
+    and configures author information before committing.
     
     Payload:
-      - message: the commit message for the git commit.
+      - message: the commit message for the git commit
+      - author_name: name to use for git author
+      - author_email: email to use for git author
     """
-    # Locate the git-controller container using its Docker Compose service label.
     containers = docker_client.containers.list(filters={"label": "com.docker.compose.service=git-controller"})
     if not containers:
         raise HTTPException(status_code=404, detail="Git controller container not found")
     container = containers[0]
 
-    # Execute the git commit command inside the git-controller container.
     try:
-        exit_code, output = container.exec_run(cmd=["git", "commit", "-a", "-m", message])
+        # Set user config for this repository
+        exit_code, _ = container.exec_run(cmd=["git", "config", "user.email", payload.author_email])
+        if exit_code != 0:
+            raise HTTPException(status_code=500, detail="Failed to set user email")
+            
+        exit_code, _ = container.exec_run(cmd=["git", "config", "user.name", payload.author_name])
+        if exit_code != 0:
+            raise HTTPException(status_code=500, detail="Failed to set user name")
+
+        # Execute commit with configured author info
+        exit_code, output = container.exec_run(
+            cmd=["git", "commit", "-a", "-m", payload.message]
+        )
         if exit_code != 0:
             error_output = output.decode('utf-8') if isinstance(output, bytes) else output
             raise HTTPException(status_code=500, detail=f"Error making git commit: {error_output}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during git commit in git-controller container: {e}")
-
-    return {"message": f"Git commit made with message: '{message}'"}
+        raise HTTPException(status_code=500, detail=f"Error during git operations: {e}")
+    return {"message": f"Git commit made with message: '{payload.message}'"}
 
 app.include_router(cmd_router)
 app.include_router(auto_router)
