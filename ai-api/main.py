@@ -20,6 +20,7 @@ import os as os_lib
 TARGET_API = 'api'
 TARGET_UI = 'ui'
 TARGET_API_SELF='ai-api-self'
+AI_MODEL = 'o3-mini'
 # goes through the above config variables 
 # checks if env vars of those names exist and sets them if they do
 vars = [v for v in globals()]
@@ -361,14 +362,14 @@ from fastapi import HTTPException
 
 def ask_api(prompt: str):
     """
-    Sends the prompt to the GPT-4o mini model and extracts the modified code
+    Sends the prompt to the model and extracts the modified code
     (enclosed between <|start-code|> and <|end-code|>) and any additional explanatory reply.
     """
     conversation_history = [{"role": "user", "content": prompt}]
     
     try:
         response = ai_client.chat.completions.create(
-            model="gpt-4o-mini",  # or any available model
+            model=AI_MODEL,  # or any available model
             messages=conversation_history,
             temperature=0.5,      # adjust as needed
         )
@@ -416,14 +417,14 @@ async def api_mod(r:ModRequest):
 
 def ask_ui(prompt: str):
     """
-    Sends the prompt to the GPT-4o mini model and extracts the modified code
+    Sends the prompt to the model and extracts the modified code
     (enclosed between <|start-code|> and <|end-code|>) and any additional explanatory reply.
     """
     conversation_history = [{"role": "user", "content": prompt}]
     
     try:
         response = ai_client.chat.completions.create(
-            model="gpt-4o-mini",  # or any available model
+            model=AI_MODEL,  # or any available model
             messages=conversation_history,
             temperature=0.5,      # adjust as needed
         )
