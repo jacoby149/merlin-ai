@@ -529,6 +529,46 @@ async def git_commit(payload: GitCommitPayload):
         raise HTTPException(status_code=500, detail=f"Error during git operations: {e}")
     return {"message": f"Git commit made with message: '{payload.message}'"}
 
+@cmd_router.post("/undo")
+async def undo_commit():
+    """
+    Checks out the previous commit in the git-controller container.
+    """
+    containers = docker_client.containers.list(filters={"label": "com.docker.compose.service=git-controller"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="Git controller container not found")
+    container = containers[0]
+
+    try:
+        exit_code, output = container.exec_run(cmd=["git", "checkout", "HEAD^"])
+        if exit_code != 0:
+            error_output = output.decode('utf-8') if isinstance(output, bytes) else output
+            raise HTTPException(status_code=500, detail=f"Error checking out to previous commit: {error_output}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during git undo operation: {e}")
+
+    return {"message": "Checked out to previous commit"}
+
+@cmd_router.post("/redo")
+async def redo_commit():
+    """
+    Checks out the next commit in the git-controller container.
+    """
+    containers = docker_client.containers.list(filters={"label": "com.docker.compose.service=git-controller"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="Git controller container not found")
+    container = containers[0]
+
+    try:
+        exit_code, output = container.exec_run(cmd=["git", "checkout", "HEAD@{1}"])
+        if exit_code != 0:
+            error_output = output.decode('utf-8') if isinstance(output, bytes) else output
+            raise HTTPException(status_code=500, detail=f"Error checking out to next commit: {error_output}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during git redo operation: {e}")
+
+    return {"message": "Checked out to next commit"}
+
 app.include_router(cmd_router)
 app.include_router(auto_router)
 
