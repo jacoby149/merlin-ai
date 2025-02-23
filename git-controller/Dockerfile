@@ -13,5 +13,5 @@ WORKDIR /repo
 COPY . /repo
 
 # Set a default command so you can access a shell
-CMD ["sh"]
+CMD ["tail", "-f", "/dev/null"]
 

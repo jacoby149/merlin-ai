@@ -12,7 +12,6 @@ from enum import Enum
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
-import settings
 import re
 
 # settings
@@ -20,7 +19,12 @@ import os as os_lib
 TARGET_API = 'api'
 TARGET_UI = 'ui'
 TARGET_API_SELF='ai-api-self'
-AI_MODEL = 'o3-mini'
+AI_MODEL = 'deepseek/deepseek-r1'
+AI_API_BASE_URL="https://api.novita.ai/v3/openai"
+
+OPENAPI_KEY=""
+DEEPSEEK_API_KEY=""
+NOVITA_API_KEY=""
 # goes through the above config variables 
 # checks if env vars of those names exist and sets them if they do
 vars = [v for v in globals()]
@@ -30,6 +34,8 @@ for v in vars :
         continue
     else:
         globals()[v] = env_val
+
+AI_API_KEY=NOVITA_API_KEY
 
 app = FastAPI(title="ChatGPT-like API with Router")
 # Include the chat router.
@@ -351,7 +357,7 @@ class NewMainContent(BaseModel):
 auto_router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
 
 # Initialize the OpenAI client.
-ai_client = OpenAI(api_key=settings.OPENAPI_KEY)
+ai_client = OpenAI(api_key=AI_API_KEY,base_url=AI_API_BASE_URL)
 
 if not ai_client.api_key:
     raise Exception("Missing OpenAI API key. Please set the OPENAPI_API_KEY environment variable.")
@@ -371,7 +377,6 @@ def ask_api(prompt: str):
         response = ai_client.chat.completions.create(
             model=AI_MODEL,  # or any available model
             messages=conversation_history,
-            temperature=0.5,      # adjust as needed
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"OpenAI API request failed: {e}")
@@ -407,7 +412,7 @@ async def api_mod(r:ModRequest):
     main_py = await read_main_py()
     main_py = main_py["content"]
     chat = r.chat
-    code = "Answer with a modified version of main.py surrounded by <|start-code|> and <|end-code|>. the output is being written right over the file!!!!"
+    code = "Answer with the full modified version of main.py surrounded by <|start-code|> and <|end-code|>. the output is being written right over the file!!!!"
     exp = "Anything in the reply not encapsulated in <|start-code|> and <|end-code|> will be shown to a user to explain the changes!"
     prompt = "\n".join([preface,main_py,chat,code,exp])
     code,reply = ask_api(prompt)
@@ -473,6 +478,31 @@ async def fs_mod(r:ModRequest):
     api_reply = (await api_mod(r))["reply"]
     ui_reply = (await ui_mod(r))["reply"]
     return {"reply":f"API : {api_reply} \n UI : {ui_reply}"}
+
+@cmd_router.post("/git_commit")
+async def git_commit(message: str):
+    """
+    Makes a git commit in the git-controller container with the provided commit message.
+    
+    Payload:
+      - message: the commit message for the git commit.
+    """
+    # Locate the git-controller container using its Docker Compose service label.
+    containers = docker_client.containers.list(filters={"label": "com.docker.compose.service=git-controller"})
+    if not containers:
+        raise HTTPException(status_code=404, detail="Git controller container not found")
+    container = containers[0]
+
+    # Execute the git commit command inside the git-controller container.
+    try:
+        exit_code, output = container.exec_run(cmd=["git", "commit", "-a", "-m", message])
+        if exit_code != 0:
+            error_output = output.decode('utf-8') if isinstance(output, bytes) else output
+            raise HTTPException(status_code=500, detail=f"Error making git commit: {error_output}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during git commit in git-controller container: {e}")
+
+    return {"message": f"Git commit made with message: '{message}'"}
 
 app.include_router(cmd_router)
 app.include_router(auto_router)
