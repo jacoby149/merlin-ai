@@ -1,5 +1,4 @@
-Get the CSS hooked up, cuz style matters
-Get O3 Mini High hooked up.
+
 Make env vars to adjust the target. (self vs. app?)
 Make two new merlin containers pointed at itself.
 Try asking it to add undo / redo!
