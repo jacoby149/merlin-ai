@@ -1,21 +1,12 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import HomePage from './HomePage';
-import config from "./config";
 
-const UIMode = "Home"
 
   const renderView = () => {
-    switch (config.homePageEnabled) {
-    case true:
-    return <HomePage/>;
-    default:
       return <App/>;
-  }
 };
 
 

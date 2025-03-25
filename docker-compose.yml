@@ -2,14 +2,33 @@
 version: "3.9"
 
 services:
+  ai-api-self:
+    build:
+      context: ./ai-api
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
+    environment:
+      - TARGET_API=ai-api
+      - TARGET_UI=ai-ui
+      - TARGET_SELF_API=ai-api-self
+  ai-ui-self:
+    build:
+      context: ./ai-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8002
   ai-api:
     build:
-      context: .
+      context: ./ai-api
       dockerfile: Dockerfile
     ports:
       - "8001:8000"
     volumes:
-      - ./:/git
       - ./ai-api:/app  # Mount the api folder into the container for hot refresh
       - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
   ai-ui:
