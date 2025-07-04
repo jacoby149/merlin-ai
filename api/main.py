@@ -19,6 +19,3 @@ app.add_middleware(
 def health_check():
     return {"status": "healthy"}
 
-@app.get("/items/{item_id}", description="Retrieve an item by its ID.")
-def read_item(item_id: int):
-    return {"item_id": item_id, "name": f"Item {item_id}"}

@@ -1,5 +1,4 @@
-Change to have API_URL dropdown.
-And add API key too!
+Use strictly Chat GPT 4.1, dont have a choice...
 
 Make env vars to adjust the target. (self vs. app?)
 Make two new merlin containers pointed at itself.
