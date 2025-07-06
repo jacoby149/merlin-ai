@@ -19,14 +19,10 @@ import re
 import os as os_lib
 TARGET_API = 'api'
 TARGET_UI = 'ui'
-TARGET_API_SELF='ai-api-self'
 AI_MODEL = 'gpt-4o-mini'
-NOVITA_AI_API_BASE_URL="https://api.novita.ai/v3/openai"
 OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 
 OPENAPI_KEY=""
-DEEPSEEK_API_KEY=""
-NOVITA_API_KEY=""
 
 GIT_NAME=""
 GIT_EMAIL=""
