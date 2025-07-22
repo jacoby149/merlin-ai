@@ -1,27 +1,30 @@
-Use strictly Chat GPT 4.1, dont have a choice...
+Make the license keys work properly
+  UI
+  API
+Make the GPT API Key work too.
+  UI
+  API
+Store that the license key was verified as a cookie.
+  UI
+  API
+Store GPT API Key as a cookie too.
+  UI
+  API
+Then, the thing works.
+No ENV var needed.
 
-Make env vars to adjust the target. (self vs. app?)
-Make two new merlin containers pointed at itself.
-Try asking it to add undo / redo!
-NOW IT IS HOT HOT HOT.
+Add undo/redo
+Make the chat UI better.
+  Show history + be bigger, i.e. half screen.
 
------------ The SINGULARITY
+Make the marketing an ENV variable to have the UI to go on or off.
+  Make the marketing page make more sense.
 
-Homepage marketing!!!
-Product Flow (Approx 2 HRs?)
-  Add license key verification[Gumroad]
-  Add 7 Day Trial [Via. Simple ENVs.] [Backend Enforced + Frontend Enforced.]
-  Add OpenAPI key storing [to env or cookies]
-  Make UI that takes the GPT API Key and writes it to the .env
-  make the ai dropdown actually pass it to the api
+Make a docs page with instructions.
 
-Add getting started videos
+Add getting started + deployment videos
   Developers (Windows) (Mac)
-  Non Developers (Windows) (Mac)
 
-Approx 3 Hrs?
-Add licensing files [MNazar]
-After Legal licenses are added, squash the code into one commit.
 File for a trademark
 
 RELEASE V1.0.0!

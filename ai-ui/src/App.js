@@ -185,9 +185,8 @@ function App() {
             onChange={(e) => setSelectedEngine(e.target.value)}
           >
             <option value="ChatGPT">ChatGPT</option>
-            <option value="Deepseek" disabled>
-              Deepseek (TBD)
-            </option>
+            <option value="Other">More Coming Soon!</option>
+
           </select>
 
           <select
@@ -196,8 +195,8 @@ function App() {
             onChange={(e) => setSelectedModel(e.target.value)}
           >
             <option value="gpt-4.1">gpt-4.1</option>
-            <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-          </select>
+            <option value="Other">More Coming Soon!</option>
+         </select>
         </div>
         <button className="toggleButton" onClick={() => setIsDarkMode(prev => !prev)}>
           {isDarkMode ? '🌙' : '☀️'}
