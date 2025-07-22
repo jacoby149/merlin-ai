@@ -14,25 +14,19 @@ product_ids = {
 def verify_gumroad_license(product_id, license_key):
     url = "https://api.gumroad.com/v2/licenses/verify"
     data = {"product_id": product_id, "license_key": license_key}
-    print(data)
     response = requests.post(url, data=data)
     return response.json()
 
 def verify_merlin_license(license_key):
-    validations = []
+    curr_response = None
     for k in product_ids:
         v = product_ids[k]
-        validations.append(verify_gumroad_license(v,license_key)) 
-    return validations
+        curr_response = verify_gumroad_license(v,license_key) 
+        if curr_response["success"]==True:
+            return curr_response
+    return curr_response
 
 if __name__ == "__main__":
-    result = verify_gumroad_license("PRODUCT_ID", "LICENSE_KEY")
-    if result["success"]:
-        print("License is valid!")
-    else:
-        print("Invalid license:", result.get("message"))
     MY_LICENSE_KEY = "A8EBB701-225D444E-BFD6911F-FDB25D40"
     result = verify_merlin_license(MY_LICENSE_KEY)
-    for v in result:
-        print(v)
-    
+    print(result)
