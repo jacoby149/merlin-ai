@@ -195,10 +195,8 @@ function App() {
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
           >
-            <option value="4o">4o</option>
-            <option value="4o-mini">4o-mini</option>
-            <option value="o3-mini">o3-mini</option>
-            <option value="o3-mini-high">o3-mini-high</option>
+            <option value="gpt-4.1">gpt-4.1</option>
+            <option value="gpt-4.1-mini">gpt-4.1-mini</option>
           </select>
         </div>
         <button className="toggleButton" onClick={() => setIsDarkMode(prev => !prev)}>

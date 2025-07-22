@@ -19,7 +19,7 @@ import re
 import os as os_lib
 TARGET_API = 'api'
 TARGET_UI = 'ui'
-AI_MODEL = 'gpt-4o-mini'
+AI_MODEL = 'gpt-4.1'
 OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 
 OPENAPI_KEY=""
