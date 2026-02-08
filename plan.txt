@@ -1,3 +1,5 @@
+Integrate Opencode into the project.
+  Make a container that does opencode serve.
 Make the license keys work properly
   UI
   API
