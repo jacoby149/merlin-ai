@@ -1,5 +1,12 @@
+i am going to stream this shit...
+so i need to do use aws to do all my parameters.
+otherwise it is insecure.
+aws parameter store mad chill.
+then sso is smooth.
+
 Integrate Opencode into the project.
   Make a container that does opencode serve.
+
 Make the license keys work properly
   UI
   API
