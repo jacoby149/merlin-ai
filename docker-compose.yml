@@ -28,6 +28,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - 4096:4096    
+    volumes:
+      - ./ai-api:/merlin-ai/ai-api
+      - ./api:/merlin-ai/api
+      - ./ai-ui:/merlin-ai/ai-ui
+      - ./ui:/merlin-ai/ui
+      - ./opencode-scratch:/merlin-ai/opencode-scratch
   ai-api:
     build:
       context: ./ai-api
