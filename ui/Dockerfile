@@ -1,25 +1,16 @@
-# Use an official Node runtime as a parent image
-FROM node:16-alpine
+# Use the official Bun image for 2026
+FROM oven/bun:latest
 
-# (Optional) Set environment variable to force polling for file changes.
-# This is sometimes needed on Docker for Mac/Windows.
-ENV CHOKIDAR_USEPOLLING=true
-
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy dependency definitions
-COPY package*.json ./
+# Copy package files first for better caching
+COPY package.json bun.lock ./
+RUN bun install 
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the app's source code
+# Copy the rest of the code
 COPY . .
 
-# Expose port 3000 for the React development server
-EXPOSE 3000
+EXPOSE 5173
 
-# Run the app in development mode (with hot reloading)
-CMD ["npm", "start"]
-
+# Start the dev server
+CMD ["bun", "run", "dev", "--host", "0.0.0.0"]
