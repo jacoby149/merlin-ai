@@ -4,9 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-gunicorn = "*"
+httpx = "*"
+trimesh = "*"
+langchain = "*"
+langchain-openai = "*"
+openai = "*"
+langchain-core = "*"
 fastapi = "*"
 uvicorn = "*"
+numpy = "*"
+websockets = "*"
+mujoco = "*"
+opencv-python-headless = "*"
 
 [dev-packages]
 
