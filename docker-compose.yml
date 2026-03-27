@@ -9,11 +9,17 @@ services:
     ports:
       - 4096:4096    
     volumes:
+      - ./opencode-server:/app 
+      - ~/.aws:/root/.aws:ro 
       - ./opencode-server/opencode-config:/root/.config/opencode 
       - ./ai-api:/merlin-ai/ai-api
       - ./api:/merlin-ai/api
       - ./ai-ui:/merlin-ai/ai-ui
       - ./ui:/merlin-ai/ui
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-default} 
+
+
   api:
     build:
       context: .
