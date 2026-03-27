@@ -25,7 +25,5 @@ WORKDIR /workspace
 
 EXPOSE 4096
 
-ENV OPENCODE_SERVER_PASSWORD=changeme
-
 # 6. Start the server
 CMD ["opencode", "serve", "--hostname", "0.0.0.0","--port","4096"]

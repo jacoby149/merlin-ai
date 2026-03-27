@@ -2,26 +2,6 @@
 version: "3.9"
 
 services:
-  # ai-api-self:
-  #   build:
-  #     context: ./ai-api
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8002:8000"
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
-  #   environment:
-  #     - TARGET_API=ai-api
-  #     - TARGET_UI=ai-ui
-  #     - TARGET_SELF_API=ai-api-self
-  # ai-ui-self:
-  #   build:
-  #     context: ./ai-ui
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3002:3000"
-  #   environment:
-  #     - REACT_APP_API_URL=http://localhost:8002
   opencode-server:
     build:
       context: ./opencode-server
@@ -30,37 +10,10 @@ services:
       - 4096:4096    
     volumes:
       - ./opencode-server/opencode-config:/root/.config/opencode 
-      - opencode_node_modules:/root/.config/opencode/node_modules 
       - ./ai-api:/merlin-ai/ai-api
       - ./api:/merlin-ai/api
       - ./ai-ui:/merlin-ai/ai-ui
       - ./ui:/merlin-ai/ui
-  # ai-api:
-  #   build:
-  #     context: ./ai-api
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8001:8000"
-  #   volumes:
-  #     - ./ai-api:/app  # Mount the api folder into the container for hot refresh
-  #     - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
-  # ai-ui:
-  #   build:
-  #     context: ./ai-ui
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3001:3000"
-  #   environment:
-  #      - WDS_SOCKET_PORT=3001
-  #   volumes:
-  #     - ./ai-ui:/app  # Mount the api folder into the container for hot refresh
-  # git-controller:
-  #   build:
-  #     context: .
-  #     dockerfile: ./git-controller/Dockerfile
-  #   volumes:
-  #     - .:/repo  # Mount the api folder into the container for hot refresh
- 
   api:
     build:
       context: .
