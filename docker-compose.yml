@@ -9,7 +9,7 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - ~/.aws:/root/.aws:ro 
+      - ~/.aws:/root/.aws 
       - ./ai-api:/app  # Mount the api folder into the container for hot refresh
       - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
   ai-ui:
@@ -21,7 +21,7 @@ services:
     environment:
        - WDS_SOCKET_PORT=3001
     volumes:
-      - ~/.aws:/root/.aws:ro 
+      - ~/.aws:/root/.aws 
       - ./ai-ui:/app  # Mount the api folder into the container for hot refresh
   opencode-server:
     build:
@@ -31,7 +31,7 @@ services:
       - 4096:4096    
     volumes:
       - ./opencode-server:/app 
-      - ~/.aws:/root/.aws:ro 
+      - ~/.aws:/root/.aws 
       - ./opencode-server/opencode-config:/root/.config/opencode 
       - ./ai-api:/merlin-ai/ai-api
       - ./api:/merlin-ai/api
@@ -49,7 +49,7 @@ services:
       - "8000:8000"
     volumes:
       - ./api:/app  # Mount the api folder into the container for hot refresh
-      - ~/.aws:/root/.aws:ro 
+      - ~/.aws:/root/.aws 
     environment:
       # Pass your host's AWS_PROFILE to the container, fallback to 'default' if not set
       - AWS_PROFILE=${AWS_PROFILE:-default} 
@@ -62,7 +62,7 @@ services:
     volumes:
       - ./ui:/app                   # Mount all your code (for hot reload)
       - ui_node_modules:/app/node_modules # But overlay node_modules ONLY as a Docker volume
-      - ~/.aws:/root/.aws:ro 
+      - ~/.aws:/root/.aws 
  
     environment:
       - NODE_ENV=development
