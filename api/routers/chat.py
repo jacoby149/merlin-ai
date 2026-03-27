@@ -10,6 +10,7 @@ from models.models import (
     SourceFile
 )
 import re
+import settings
 
 router = APIRouter(prefix="/chat")
 
@@ -86,7 +87,7 @@ async def chat_scad_endpoint(req: ChatRequest):
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
-    llm = ChatOpenAI(model="gpt-4.1")
+    llm = ChatOpenAI(model="gpt-4.1",api_key=settings.OPENAI_API_KEY.get_secret_value())
     chain = prompt | llm | parser
 
     try:

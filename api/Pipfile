@@ -16,6 +16,7 @@ numpy = "*"
 websockets = "*"
 mujoco = "*"
 opencv-python-headless = "*"
+boto3 = "*"
 
 [dev-packages]
 

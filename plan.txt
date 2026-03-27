@@ -1,3 +1,13 @@
+Lets try opencode + oh my opencode...
+I just never did it before.
+   Lets use it to
+   1. Make the linktree at the AI layer.
+   2. switch the AI UI to bun
+   3. Make a config page for ENV vars at
+    4. Object maker layer
+    5. App maker layer
+   4. Config ENV vars so stuff navigates nicely.
+   5. Make license key work at AI Layer!
 
 Integrate Opencode into the project.
   Make a container that does opencode serve.
