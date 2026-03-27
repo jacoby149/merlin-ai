@@ -20,7 +20,9 @@ def get_parameter(parameter_name, region_name='us-east-1', with_decryption=True)
     except NoCredentialsError:
         print("AWS credentials not found.")
     except ClientError as e:
-        print(f"Failed to retrieve parameter: {e}")
+        error_code = e.response.get('Error', {}).get('Code')
+        if error_code != 'ParameterNotFound':
+            print(f"Failed to retrieve parameter: {e}")
     return None
 
 if __name__ == '__main__':

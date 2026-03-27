@@ -13,7 +13,11 @@ from routers.commands import (
 )
 
 
-router = APIRouter(prefix="/auto_coder", tags=["auto_coder"])
+router = APIRouter(
+    prefix="/auto_coder",
+    tags=["auto_coder 🔒 activation required"],
+    responses={403: {"description": "Activated Gumroad license required. Call /activate first."}},
+)
 
 
 class ModRequest(BaseModel):

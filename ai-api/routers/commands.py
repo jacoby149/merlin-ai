@@ -10,7 +10,11 @@ from pydantic import BaseModel
 import settings
 
 
-router = APIRouter(prefix="/commands", tags=["commands"])
+router = APIRouter(
+    prefix="/commands",
+    tags=["commands 🔒 activation required"],
+    responses={403: {"description": "Activated Gumroad license required. Call /activate first."}},
+)
 
 MAIN_PY = "/app/main.py"
 APP_JS = "/app/src/App.js"

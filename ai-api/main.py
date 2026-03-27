@@ -1,12 +1,14 @@
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
 import settings
 from routers.auto_coder import router as auto_coder_router
 from routers.commands import router as commands_router
+from routers.licensing import router as licensing_router
+from services.licensing import require_activated_license
 
 
 app = FastAPI(
@@ -22,8 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(commands_router)
-app.include_router(auto_coder_router)
+app.include_router(licensing_router)
+app.include_router(commands_router, dependencies=[Depends(require_activated_license)])
+app.include_router(auto_coder_router, dependencies=[Depends(require_activated_license)])
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -32,7 +35,11 @@ def root() -> HTMLResponse:
     return HTMLResponse(content=html)
 
 
-@app.get("/health")
+@app.get(
+    "/health",
+    dependencies=[Depends(require_activated_license)],
+    responses={403: {"description": "Activated Gumroad license required. Call /activate first."}},
+)
 def health() -> dict[str, str]:
     return {
         "service": settings.APP_NAME,
