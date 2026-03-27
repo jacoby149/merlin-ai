@@ -30,6 +30,7 @@ services:
       - 4096:4096    
     volumes:
       - ./opencode-server/opencode-config:/root/.config/opencode 
+      - opencode_node_modules:/root/.config/opencode/node_modules 
       - ./ai-api:/merlin-ai/ai-api
       - ./api:/merlin-ai/api
       - ./ai-ui:/merlin-ai/ai-ui
