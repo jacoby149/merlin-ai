@@ -1,0 +1,14 @@
+[project]
+name = "merlin-ai-controller-api"
+version = "0.1.0"
+description = "FastAPI controller service for Merlin AI"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "boto3==1.42.61",
+    "docker==7.1.0",
+    "fastapi==0.135.1",
+    "gunicorn==25.1.0",
+    "openai==2.24.0",
+    "uvicorn==0.41.0",
+]
