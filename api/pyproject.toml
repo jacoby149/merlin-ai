@@ -1,0 +1,21 @@
+[project]
+name = "ai-object-foundry-api"
+version = "0.1.0"
+description = "FastAPI backend for AI-generated OpenSCAD workflows"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "boto3==1.42.72",
+    "fastapi==0.135.1",
+    "httpx==0.28.1",
+    "langchain==1.2.13",
+    "langchain-core==1.2.20",
+    "langchain-openai==1.1.11",
+    "mujoco==3.6.0",
+    "numpy==2.2.6",
+    "opencv-python-headless==4.13.0.92",
+    "openai==2.29.0",
+    "trimesh==4.11.4",
+    "uvicorn==0.42.0",
+    "websockets==16.0",
+]

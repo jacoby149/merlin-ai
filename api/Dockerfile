@@ -6,36 +6,27 @@ WORKDIR /app/ui
 RUN bun install
 RUN bun run build
 
-# --- FIX: Use linux/amd64 for M3 Mac compatibility ---
-FROM python:3.10-slim
+FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
 
 WORKDIR /app
 
-# --- FIX: Updated package names for Debian Bookworm/Trixie ---
-# 'libgl1-mesa-glx' is deprecated. We use 'libgl1' instead.
-# We only need the runtime libraries for OpenGL (MuJoCo) and OpenCV
 # Install runtime libraries for OpenCV and MuJoCo (OSMesa)
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
     libosmesa6-dev \
-    && rm -rf /var/lib/apt/lists/*# Install pipenv
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir pipenv
+ENV UV_PROJECT_ENVIRONMENT=/app/.venv
 
-# Copy Pipfiles
-COPY api/Pipfile api/Pipfile.lock ./
+COPY api/pyproject.toml api/uv.lock api/README.md ./
 
-# Install dependencies
-RUN pipenv install --deploy --ignore-pipfile
+RUN uv sync --locked --no-dev
 
-# Copy backend code
 COPY api/ /app/
 
-# Copy frontend static build output
 COPY --from=frontend-build /app/ui/dist /static/ui
 
 EXPOSE 8000
 
-# Run
-CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
