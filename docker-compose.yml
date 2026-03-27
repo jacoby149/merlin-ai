@@ -2,6 +2,27 @@
 version: "3.9"
 
 services:
+  ai-api:
+    build:
+      context: ./ai-api
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - ~/.aws:/root/.aws:ro 
+      - ./ai-api:/app  # Mount the api folder into the container for hot refresh
+      - /var/run/docker.sock:/var/run/docker.sock # Gives access from this container to control EVERYTHING :)
+  ai-ui:
+    build:
+      context: ./ai-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+       - WDS_SOCKET_PORT=3001
+    volumes:
+      - ~/.aws:/root/.aws:ro 
+      - ./ai-ui:/app  # Mount the api folder into the container for hot refresh
   opencode-server:
     build:
       context: ./opencode-server

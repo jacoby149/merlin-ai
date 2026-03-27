@@ -1,7 +1,47 @@
+# =========================
+# Environment Variables & Secrets
+# =========================
 .env
 .ai-api-env
 .ui-env
 .api-env
-**.DS_Store
-ai-ui/node_modules
-ai-ui/build
+*.env.local
+
+# =========================
+# OS Artifacts (Mac / Windows)
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Python & Virtual Environments
+# =========================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (if you ever create them locally)
+.venv/
+venv/
+env/
+
+# =========================
+# Node.js & Frontend
+# =========================
+# Globally ignore node_modules anywhere they pop up
+node_modules/
+
+# Specific build folders
+ai-ui/build/
+# ui/dist/  <-- (Uncomment if your other UI folder outputs to 'dist')
+
+# =========================
+# IDEs & Editors (Optional but recommended)
+# =========================
+.vscode/
+.idea/
+*.swp
