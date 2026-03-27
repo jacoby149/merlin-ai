@@ -1,3 +1,6 @@
+Make the opencode bootstrapper!
+No fastapi to start...
+
 Lets try opencode + oh my opencode...
 I just never did it before.
    Lets use it to
