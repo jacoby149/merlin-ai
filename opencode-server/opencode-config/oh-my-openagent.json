@@ -1,0 +1,11 @@
+{
+  "agents": {
+    "sisyphus": { "model": "anthropic/claude-3-5-sonnet-latest" },
+    "prometheus": { "model": "openai/gpt-4o" },
+    "oracle": { "model": "openai/gpt-4o" },
+    "atlas": { "model": "anthropic/claude-3-5-sonnet-latest" },
+    "explore": { "model": "openai/gpt-4o-mini" },
+    "librarian": { "model": "openai/gpt-4o-mini" },
+    "multimodal-looker": { "model": "google/gemini-1.5-pro" }
+  }
+}
